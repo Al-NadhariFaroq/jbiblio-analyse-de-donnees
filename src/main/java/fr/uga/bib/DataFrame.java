@@ -114,5 +114,25 @@ public class DataFrame {
         }
     }
 
+
+    /** 
+     * @param colName
+     * @return Double
+     */
+    public Double getMean(String colName){
+        return 0.0;
+    }
+    public Double getMedian(String colName){
+        return 0.0;
+    }
+
+    public Double getMax(String colName){
+        return 0.0;
+    }
+
+    public Double getMin(String colName){
+        return 0.0;
+    }
+
 }
 
