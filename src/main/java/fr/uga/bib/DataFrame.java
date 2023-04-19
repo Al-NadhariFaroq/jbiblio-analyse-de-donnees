@@ -1,51 +1,56 @@
 package fr.uga.bib;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class DataFrame {
-
-    private List<List<Object>> data; // le tableau de données
-    private List<String> columns; // les noms de colonnes
+    private final Hashtable<String, Pair<Class<?>, List<Object>>> dataFrame;
 
     public DataFrame(Object[][] inputData) {
-        data = new ArrayList<>();
-        columns = new ArrayList<>();
+        dataFrame = new Hashtable<>();
+
         int numRows = inputData.length;
         int numCols = inputData[0].length;
+
         for (int j = 0; j < numCols; j++) {
+            String colLabel = (String) inputData[0][j];
             Object[] colData = new Object[numRows];
             for (int i = 0; i < numRows; i++) {
                 colData[i] = inputData[i][j];
             }
-            addColumn(colData);
+            addColumn(colLabel, colData);
         }
     }
 
     public DataFrame(String filename) throws IOException {
-        data = new ArrayList<>();
-        columns = new ArrayList<>();
+        dataFrame = new Hashtable<>();
+
         BufferedReader br = new BufferedReader(new FileReader(filename));
+
         String line = br.readLine();
         if (line == null) {
             throw new IOException("File is empty");
         }
-        String[] colNames = line.split(",");
+
+        /*String[] colNames = line.split(",");
         for (String colName : colNames) {
-            columns.add(colName);
+            columnNames.add(colName);
             data.add(new ArrayList<>());
         }
+
         while ((line = br.readLine()) != null) {
             String[] fields = line.split(",");
             for (int i = 0; i < fields.length; i++) {
                 Object fieldValue = parseFieldValue(fields[i]);
                 data.get(i).add(fieldValue);
             }
-        }
+        }*/
+
         br.close();
     }
 
@@ -61,54 +66,88 @@ public class DataFrame {
         }
     }
 
-    public void addColumn(Object[] colData) {
-        List<Object> colList = new ArrayList<>(Arrays.asList(colData));
-        columns.add(colList.get(0).toString());
-        data.add(colList.subList(1,colList.size()));
-    }
-
-    public int numRows() {
-        if (data.size() == 0) {
-            return 0;
+    private Class<?> parseColumn(List<Object> column) {
+        Class<?> colClass = null;
+        for (Object value : column) {
+            if (value instanceof String) {
+                return value.getClass();
+            } else if (colClass == null && value instanceof Boolean) {
+                colClass = value.getClass();
+            } else if ((colClass == null || colClass.equals(Boolean.class)) && value instanceof Integer) {
+                colClass = value.getClass();
+            } else if ((colClass == null || colClass.equals(Boolean.class) || colClass.equals(Integer.class)) && value instanceof Float) {
+                colClass = value.getClass();
+            } else if ((colClass == null || colClass.equals(Boolean.class) || colClass.equals(Integer.class) || colClass.equals(Float.class)) && value instanceof Double) {
+                colClass = value.getClass();
+            }
         }
-        return data.get(0).size();
+        if (colClass == null)
+            colClass = String.class;
+        return colClass;
     }
 
     public int numCols() {
-        return columns.size();
+        return dataFrame.size();
     }
 
-    public Object getValue(int row, int col) {
-        return data.get(col).get(row);
+    public int numRows() {
+        if (dataFrame.size() == 0) {
+            return 0;
+        }
+        return dataFrame.values().iterator().next().getValue().size();
     }
 
-    public Object[] getColumn(int col) {
-        return data.get(col).toArray();
+    public Class<?> getType(String label) {
+        return dataFrame.get(label).getKey();
     }
 
-    public void setValue(int row, int col, Object value) {
-        data.get(col).set(row, value);
+    public <T> T getValue(String label, int idx, Class<T> type) {
+        if (!dataFrame.get(label).getKey().equals(type))
+            throw new RuntimeException("The given type doesn't correspond to the column type.");
+        return type.cast(dataFrame.get(label).getValue().get(idx));
     }
 
-    public void setColumn(int col, Object[] colData) {
-        data.set(col, new ArrayList<>(Arrays.asList(colData)));
+    public <T> List<T> getColumn(String label, Class<T> type) {
+        if (!dataFrame.get(label).getKey().equals(type))
+            throw new RuntimeException("The given type doesn't correspond to the column type.");
+
+        List<T> column = new ArrayList<>();
+        for(Object value : dataFrame.get(label).getValue()) {
+            column.add(type.cast(value));
+        }
+        return column;
     }
 
-    public void removeColumn(int col) {
-        columns.remove(col);
-        data.remove(col);
+    public void addColumn(String label, Object[] colData) {
+        List<Object> colList = new ArrayList<>(Arrays.asList(colData));
+        Class<?> colClass = parseColumn(colList);
+        dataFrame.put(label, new MutablePair<>(colClass, colList));
     }
 
+    public void setValue(String label, int idx, Object value) {
+        dataFrame.get(label).getValue().set(idx, value);
+    }
+
+    public void setColumn(String label, Object[] colData) {
+        dataFrame.get(label).setValue(new ArrayList<>(Arrays.asList(colData)));
+    }
+
+    public void removeColumn(String label) {
+        dataFrame.remove(label);
+    }
 
     public void print() {
-        for (String colName : columns) {
-            System.out.print(colName + "\t");
+        Iterator<String> labelIt = dataFrame.keys().asIterator();
+        while (labelIt.hasNext()) {
+            System.out.print(labelIt.next() + "\t");
         }
         System.out.println();
 
         for (int i = 0; i < numRows(); i++) {
-            for (int j = 0; j < numCols(); j++) {
-                System.out.print(getValue(i,j) + "\t");
+            labelIt = dataFrame.keys().asIterator();
+            while (labelIt.hasNext()) {
+                String label = labelIt.next();
+                System.out.print(getValue(label, i, dataFrame.get(label).getKey()) + "\t");
             }
             System.out.println();
         }
