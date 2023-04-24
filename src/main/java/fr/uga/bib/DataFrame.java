@@ -26,60 +26,66 @@ public class DataFrame {
 		dataFrame = new Hashtable<>();
 		typeFrame = new Hashtable<>();
 
-		for (Object[] column : inputData) {
-			String label = String.valueOf(column[0]);
-			String typeName = String.valueOf(column[1]);
-			Object[] data = Arrays.copyOfRange(column, 2, column.length);
-			try {
-				Class<?> type = Class.forName(typeName);
-				addColumn(label, type, data);
-			} catch (ClassNotFoundException e) {
-				throw new ClassNotFoundException(String.format(invalidType,
-															   typeName
-				));
-			}
-		}
-	}
+        initialize(inputData);
+    }
 
-	public DataFrame(String filename) throws IOException {
-		dataFrame = new Hashtable<>();
-		typeFrame = new Hashtable<>();
+    public DataFrame(String filename) throws IOException, ClassNotFoundException {
+        dataFrame = new Hashtable<>();
+        typeFrame = new Hashtable<>();
 
-		BufferedReader br = new BufferedReader(new FileReader(filename));
+        BufferedReader br = new BufferedReader(new FileReader(filename));
 
-		String line = br.readLine();
-		if (line == null) {
-			throw new IOException("File is empty");
-		}
-
-        /*String[] colNames = line.split(",");
-        for (String colName : colNames) {
-            columnNames.add(colName);
-            data.add(new ArrayList<>());
-        }
-
+        List<String[]> inputRead = new ArrayList<>();
+        String line;
         while ((line = br.readLine()) != null) {
             String[] fields = line.split(",");
-            for (int i = 0; i < fields.length; i++) {
-                Object fieldValue = parseFieldValue(fields[i]);
-                data.get(i).add(fieldValue);
+            inputRead.add(fields);
+        }
+
+        int numCols = inputRead.get(0).length;
+        int numRows = inputRead.size();
+
+        Object[][] inputData = new Object[numCols][numRows];
+        for (int i = 0; i < numCols; i++) {
+            inputData[i][0] = inputRead.get(0)[i];
+            inputData[i][1] = inputRead.get(1)[i];
+            for (int j = 2; j < numRows; j++) {
+                inputData[i][j] = parseValue(inputRead.get(1)[i], inputRead.get(j)[i]);
             }
-        }*/
+        }
 
-		br.close();
-	}
+        initialize(inputData);
+        br.close();
+    }
 
-	private Object parseFieldValue(String fieldValue) {
-		try {
-			return Integer.parseInt(fieldValue);
-		} catch (NumberFormatException e) {
-			try {
-				return Double.parseDouble(fieldValue);
-			} catch (NumberFormatException e2) {
-				return fieldValue;
-			}
-		}
-	}
+    private void initialize(Object[][] inputData) throws ClassNotFoundException {
+        for (Object[] column : inputData) {
+            String label = String.valueOf(column[0]);
+            String typeName = String.valueOf(column[1]);
+            Object[] data = Arrays.copyOfRange(column, 2, column.length);
+            try {
+                Class<?> type = Class.forName(typeName);
+                addColumn(label, type, data);
+            } catch (ClassNotFoundException e) {
+                throw new ClassNotFoundException(String.format(invalidType,
+                        typeName
+                ));
+            }
+        }
+    }
+
+    private Object parseValue(String typeName, String value) {
+        return switch (typeName) {
+            case "java.lang.Boolean" -> Boolean.valueOf(value);
+            case "java.lang.Byte" -> Byte.valueOf(value);
+            case "java.lang.Short" -> Short.valueOf(value);
+            case "java.lang.Integer" -> Integer.valueOf(value);
+            case "java.lang.Long" -> Long.valueOf(value);
+            case "java.lang.Float" -> Float.valueOf(value);
+            case "java.lang.Double" -> Double.valueOf(value);
+            default -> value;
+        };
+    }
 
 	public int numCols() {
 		return dataFrame.size();

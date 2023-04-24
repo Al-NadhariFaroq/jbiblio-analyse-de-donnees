@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -32,6 +34,86 @@ public class DataFrameTest {
 		Object[] col4 = {"fourth", "java.lang.Double", 1.2, 5.3, -100.02};
 		Object[][] data = {col1, col2, col3, col4};
 		DataFrame df2 = new DataFrame(data);
+	}
+
+	@Test
+	public void initCSV() throws IOException, ClassNotFoundException {
+		df = new DataFrame("src/test/resources/df.csv");
+
+		assertEquals("Get column number test", 3, df.numCols());
+		assertEquals("Get row number test", 4, df.numRows());
+		assertEquals("Get first column type test",
+				Integer.class,
+				df.getType("id")
+		);
+		assertEquals("Get second column type test",
+				String.class,
+				df.getType("name")
+		);
+		assertEquals("Get third column type test",
+				Float.class,
+				df.getType("sold")
+		);
+		assertEquals("Get first integer value test",
+				Integer.valueOf(1),
+				df.getValue("id", 0, Integer.class)
+		);
+		assertEquals("Get second integer value test",
+				Integer.valueOf(2),
+				df.getValue("id", 1, Integer.class)
+		);
+		assertEquals("Get third integer value test",
+				Integer.valueOf(3),
+				df.getValue("id", 2, Integer.class)
+		);
+		assertEquals("Get fourth integer value test",
+				Integer.valueOf(4),
+				df.getValue("id", 3, Integer.class)
+		);
+		assertEquals("Get first string value test",
+				"John",
+				df.getValue("name", 0, String.class)
+		);
+		assertEquals("Get second string value test",
+				"Jane",
+				df.getValue("name", 1, String.class)
+		);
+		assertEquals("Get third string value test",
+				"Bob",
+				df.getValue("name", 2, String.class)
+		);
+		assertEquals("Get fourth string value test",
+				"Alice",
+				df.getValue("name", 3, String.class)
+		);
+		assertEquals("Get first float value test",
+				Float.valueOf(5000.12f),
+				df.getValue("sold", 0, Float.class)
+		);
+		assertEquals("Get second float value test",
+				Float.valueOf(6000.0f),
+				df.getValue("sold", 1, Float.class)
+		);
+		assertEquals("Get third float value test",
+				Float.valueOf(4000.99f),
+				df.getValue("sold", 2, Float.class)
+		);
+		assertEquals("Get fourth float value test",
+				Float.valueOf(-7000.45f),
+				df.getValue("sold", 3, Float.class)
+		);
+		assertThrows("Wrong getting type test 1",
+				ClassCastException.class,
+				() -> df.getValue("id", 2, Boolean.class)
+		);
+		assertThrows("Wrong getting type test 2",
+				ClassCastException.class,
+				() -> df.getValue("name", 1, Double.class)
+		);
+		assertThrows("Wrong getting type test 3",
+				ClassCastException.class,
+				() -> df.getValue("sold", 3, Integer.class)
+		);
 	}
 
 	@Test
