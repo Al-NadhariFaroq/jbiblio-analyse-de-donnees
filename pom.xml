@@ -26,7 +26,21 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.7</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>Al-NadhariFaroq</name>
+      <url>https://maven.pkg.github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees</url>
+    </repository>
+</distributionManagement>
+
 </project>
