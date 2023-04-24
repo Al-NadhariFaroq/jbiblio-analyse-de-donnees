@@ -5,134 +5,285 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class DataFrame {
+	private final Hashtable<String, List<Object>> dataFrame;
+	private final Hashtable<String, String> typeFrame;
 
-    private List<List<Object>> data; // le tableau de données
-    private List<String> columns; // les noms de colonnes
+	private final String noExistentColLbl
+			= "Invalid column label '%s': does not exist";
+	private final String existingColLbl
+			= "Invalid column label '%s': already exist";
+	private final String invalidType = "Invalid type '%s': does not exist";
+	private final String typeNoMatchColType
+			= "Invalid type '%s': does not match the column type '%s'";
+	private final String valNoMatchColType
+			= "Invalid value type '%s': does not match the column type '%s'";
 
-    public DataFrame(Object[][] inputData) {
-        data = new ArrayList<>();
-        columns = new ArrayList<>();
-        int numRows = inputData.length;
-        int numCols = inputData[0].length;
-        for (int j = 0; j < numCols; j++) {
-            Object[] colData = new Object[numRows];
-            for (int i = 0; i < numRows; i++) {
-                colData[i] = inputData[i][j];
-            }
-            addColumn(colData);
-        }
-    }
+	public DataFrame(Object[][] inputData) throws ClassNotFoundException {
+		dataFrame = new Hashtable<>();
+		typeFrame = new Hashtable<>();
 
-    public DataFrame(String filename) throws IOException {
-        data = new ArrayList<>();
-        columns = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        String line = br.readLine();
-        if (line == null) {
-            throw new IOException("File is empty");
-        }
-        String[] colNames = line.split(",");
+		for (Object[] column : inputData) {
+			String label = String.valueOf(column[0]);
+			String typeName = String.valueOf(column[1]);
+			Object[] data = Arrays.copyOfRange(column, 2, column.length);
+			try {
+				Class<?> type = Class.forName(typeName);
+				addColumn(label, type, data);
+			} catch (ClassNotFoundException e) {
+				throw new ClassNotFoundException(String.format(invalidType,
+															   typeName
+				));
+			}
+		}
+	}
+
+	public DataFrame(String filename) throws IOException {
+		dataFrame = new Hashtable<>();
+		typeFrame = new Hashtable<>();
+
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+
+		String line = br.readLine();
+		if (line == null) {
+			throw new IOException("File is empty");
+		}
+
+        /*String[] colNames = line.split(",");
         for (String colName : colNames) {
-            columns.add(colName);
+            columnNames.add(colName);
             data.add(new ArrayList<>());
         }
+
         while ((line = br.readLine()) != null) {
             String[] fields = line.split(",");
             for (int i = 0; i < fields.length; i++) {
                 Object fieldValue = parseFieldValue(fields[i]);
                 data.get(i).add(fieldValue);
             }
-        }
-        br.close();
-    }
+        }*/
 
-    private Object parseFieldValue(String fieldValue) {
-        try {
-            return Integer.parseInt(fieldValue);
-        } catch (NumberFormatException e) {
-            try {
-                return Double.parseDouble(fieldValue);
-            } catch (NumberFormatException e2) {
-                return fieldValue;
-            }
-        }
-    }
+		br.close();
+	}
 
-    public void addColumn(Object[] colData) {
-        List<Object> colList = new ArrayList<>(Arrays.asList(colData));
-        columns.add(colList.get(0).toString());
-        data.add(colList.subList(1,colList.size()));
-    }
+	private Object parseFieldValue(String fieldValue) {
+		try {
+			return Integer.parseInt(fieldValue);
+		} catch (NumberFormatException e) {
+			try {
+				return Double.parseDouble(fieldValue);
+			} catch (NumberFormatException e2) {
+				return fieldValue;
+			}
+		}
+	}
 
-    public int numRows() {
-        if (data.size() == 0) {
-            return 0;
-        }
-        return data.get(0).size();
-    }
+	public int numCols() {
+		return dataFrame.size();
+	}
 
-    public int numCols() {
-        return columns.size();
-    }
+	public int numRows() {
+		if (numCols() == 0) {
+			return 0;
+		}
+		return dataFrame.elements().nextElement().size();
+	}
 
-    public Object getValue(int row, int col) {
-        return data.get(col).get(row);
-    }
+	public Class<?> getType(String label) {
+		try {
+			return Class.forName(typeFrame.get(label));
+		} catch (ClassNotFoundException e) {
+			return null; // never append
+		}
+	}
 
-    public Object[] getColumn(int col) {
-        return data.get(col).toArray();
-    }
+	public <T> T getValue(String label, int idx, Class<T> type) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		if (!type.equals(colType)) {
+			throw new ClassCastException(String.format(typeNoMatchColType,
+													   type,
+													   colType
+			));
+		}
+		return type.cast(dataFrame.get(label).get(idx));
+	}
 
-    public void setValue(int row, int col, Object value) {
-        data.get(col).set(row, value);
-    }
+	public <T> void addValue(String label, T value) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		try {
+			dataFrame.get(label).add(colType.cast(value));
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format(valNoMatchColType,
+													   value.getClass(),
+													   colType
+			));
+		}
+	}
 
-    public void setColumn(int col, Object[] colData) {
-        data.set(col, new ArrayList<>(Arrays.asList(colData)));
-    }
+	public <T> void setValue(String label, int idx, T value) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		try {
+			dataFrame.get(label).set(idx, colType.cast(value));
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format(valNoMatchColType,
+													   value.getClass(),
+													   colType
+			));
+		}
+	}
 
-    public void removeColumn(int col) {
-        columns.remove(col);
-        data.remove(col);
-    }
+	public <T> void replaceValue(String label, T oldValue, T newValue) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		try {
+			int idx = dataFrame.get(label).indexOf(oldValue);
+			dataFrame.get(label).set(idx, colType.cast(newValue));
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format(valNoMatchColType,
+													   newValue.getClass(),
+													   colType
+			));
+		}
+	}
 
+	public <T> void removeValue(String label, T value) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		try {
+			dataFrame.get(label).remove(colType.cast(value));
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format(valNoMatchColType,
+													   value.getClass(),
+													   colType
+			));
+		}
+	}
 
-    public void print() {
-        for (String colName : columns) {
-            System.out.print(colName + "\t");
-        }
-        System.out.println();
+	public void removeValue(String label, int idx) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		dataFrame.get(label).remove(idx);
+	}
 
-        for (int i = 0; i < numRows(); i++) {
-            for (int j = 0; j < numCols(); j++) {
-                System.out.print(getValue(i,j) + "\t");
-            }
-            System.out.println();
-        }
-    }
+	public <T> List<T> getColumn(String label, Class<T> type) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		Class<?> colType = getType(label);
+		if (!type.equals(colType)) {
+			throw new ClassCastException(String.format(typeNoMatchColType,
+													   type,
+													   colType
+			));
+		}
+		List<T> out = new ArrayList<>();
+		for (Object value : dataFrame.get(label)) {
+			out.add(type.cast(value));
+		}
+		return out;
+	}
 
+	public <T> void addColumn(String label, Class<T> type, Object[] data) {
+		if (dataFrame.containsKey(label)) {
+			throw new IllegalArgumentException(String.format(existingColLbl,
+															 label
+			));
+		}
+		for (Object value : data) {
+			try {
+				type.cast(value);
+			} catch (ClassCastException e) {
+				throw new ClassCastException(String.format(valNoMatchColType,
+														   value.getClass(),
+														   type.getName()
+				));
+			}
+		}
+		dataFrame.put(label, new ArrayList<>(Arrays.asList(data)));
+		typeFrame.put(label, type.getName());
+	}
 
-    /** 
-     * @param colName
-     * @return Double
-     */
-    public Double getMean(String colName){
-        return 0.0;
-    }
-    public Double getMedian(String colName){
-        return 0.0;
-    }
+	public <T> void setColumn(String label, Class<T> type, Object[] data) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		for (Object value : data) {
+			try {
+				type.cast(value);
+			} catch (ClassCastException e) {
+				throw new ClassCastException(String.format(valNoMatchColType,
+														   value.getClass(),
+														   type.getName()
+				));
+			}
+		}
+		dataFrame.replace(label, new ArrayList<>(Arrays.asList(data)));
+		typeFrame.put(label, type.getName());
+	}
 
-    public Double getMax(String colName){
-        return 0.0;
-    }
+	public void removeColumn(String label) {
+		if (!dataFrame.containsKey(label)) {
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+														   label
+			));
+		}
+		dataFrame.remove(label);
+	}
 
-    public Double getMin(String colName){
-        return 0.0;
-    }
+	@Override
+	public String toString() {
+		StringBuilder txt = new StringBuilder();
 
+		Iterator<String> labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			txt.append(labelIt.next()).append("\t");
+		}
+		txt.append("\n");
+
+		for (int i = 0; i < numRows(); i++) {
+			labelIt = dataFrame.keys().asIterator();
+			while (labelIt.hasNext()) {
+				String label = labelIt.next();
+				Class<?> type = getType(label);
+				txt.append(getValue(label, i, type)).append("\t");
+			}
+			txt.append("\n");
+		}
+		return txt.toString();
+	}
 }
-
