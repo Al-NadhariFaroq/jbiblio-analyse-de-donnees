@@ -10,19 +10,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static java.lang.Math.abs;
+
 public class DataFrame {
 	private final Hashtable<String, List<Object>> dataFrame;
 	private final Hashtable<String, String> typeFrame;
 
-	private final String noExistentColLbl
-			= "Invalid column label '%s': does not exist";
-	private final String existingColLbl
-			= "Invalid column label '%s': already exist";
+	private final String noExistentColLbl = "Invalid column label '%s': does not exist";
+	private final String existingColLbl	= "Invalid column label '%s': already exist";
 	private final String invalidType = "Invalid type '%s': does not exist";
-	private final String typeNoMatchColType
-			= "Invalid type '%s': does not match the column type '%s'";
-	private final String valNoMatchColType
-			= "Invalid value type '%s': does not match the column type '%s'";
+	private final String typeNoMatchColType	= "Invalid type '%s': does not match the column type '%s'";
+	private final String valNoMatchColType = "Invalid value type '%s': does not match the column type '%s'";
 
 	public DataFrame(Object[][] inputData) throws ClassNotFoundException {
 		dataFrame = new Hashtable<>();
@@ -115,7 +113,18 @@ public class DataFrame {
 													   colType
 			));
 		}
-		return type.cast(dataFrame.get(label).get(idx));
+		Object value = dataFrame.get(label).get(idx);
+
+		if(value != null && value.getClass().equals(Integer.class)){
+			if(type.equals(Float.class))
+				value =  ((Integer) value).floatValue();
+			else if(type.equals(Double.class))
+				value =  ((Integer) value).doubleValue();
+			else if(type.equals(Long.class))
+				value =  ((Integer) value).longValue();
+		}
+
+		return type.cast(value);
 	}
 
 	public <T> void addValue(String label, T value) {
@@ -132,6 +141,13 @@ public class DataFrame {
 													   value.getClass(),
 													   colType
 			));
+		}
+
+		Iterator<String> labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			String lb =labelIt.next();
+			if(!lb.equals(label))
+				dataFrame.get(lb).add(colType.cast(null));
 		}
 	}
 
@@ -185,6 +201,7 @@ public class DataFrame {
 													   colType
 			));
 		}
+		dataFrame.get(label).add(colType.cast(null));
 	}
 
 	public void removeValue(String label, int idx) {
@@ -194,6 +211,7 @@ public class DataFrame {
 			));
 		}
 		dataFrame.get(label).remove(idx);
+		dataFrame.get(label).add(dataFrame.get(label).size(), null);
 	}
 
 	public <T> List<T> getColumn(String label, Class<T> type) {
@@ -217,6 +235,7 @@ public class DataFrame {
 	}
 
 	public <T> void addColumn(String label, Class<T> type, Object[] data) {
+		int lengthActual = numRows();
 		if (dataFrame.containsKey(label)) {
 			throw new IllegalArgumentException(String.format(existingColLbl,
 															 label
@@ -224,6 +243,14 @@ public class DataFrame {
 		}
 		for (Object value : data) {
 			try {
+				if(value != null && value.getClass().equals(Integer.class)){
+					if(type.equals(Float.class))
+						value =  ((Integer) value).floatValue();
+					else if(type.equals(Double.class))
+						value =  ((Integer) value).doubleValue();
+					else if(type.equals(Long.class))
+						value =  ((Integer) value).longValue();
+				}
 				type.cast(value);
 			} catch (ClassCastException e) {
 				throw new ClassCastException(String.format(valNoMatchColType,
@@ -234,6 +261,29 @@ public class DataFrame {
 		}
 		dataFrame.put(label, new ArrayList<>(Arrays.asList(data)));
 		typeFrame.put(label, type.getName());
+
+		if(dataFrame.size() != 1){
+			int lengthData = data.length;
+			int numNull = abs(lengthData - lengthActual);
+			System.out.println(numNull);
+			Class<?> colType = getType(label);
+
+			if(lengthData > lengthActual){
+				Iterator<String> labelIt = dataFrame.keys().asIterator();
+				while (labelIt.hasNext()) {
+					String lb = labelIt.next();
+					if(!lb.equals(label)){
+						for(int i = 0; i < numNull; i++){
+							dataFrame.get(lb).add(colType.cast(null));
+						}
+					}
+				}
+			} else if(lengthData < lengthActual){
+				for(int i = 0; i < numNull; i++){
+					dataFrame.get(label).add(colType.cast(null));
+				}
+			}
+		}
 	}
 
 	public <T> void setColumn(String label, Class<T> type, Object[] data) {

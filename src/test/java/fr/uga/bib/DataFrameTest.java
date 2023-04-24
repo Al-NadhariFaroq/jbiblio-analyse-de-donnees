@@ -3,6 +3,8 @@ package fr.uga.bib;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -12,7 +14,8 @@ public class DataFrameTest {
 	Object[] col2 = {"second", "java.lang.Boolean", true, false, true};
 	Object[] col3 = {"third", "java.lang.String", "abc", "def", "ghi"};
 	Object[] col4 = {"fourth", "java.lang.Double", 1.2, 5.3, -100.02};
-	Object[][] data = {col1, col2, col3, col4};
+	Object[] col5 = {"fifth", "java.lang.Long", 1L, 5L, 140L};
+	Object[][] data = {col1, col2, col3, col4, col5};
 
 	DataFrame df;
 
@@ -21,9 +24,19 @@ public class DataFrameTest {
 		df = new DataFrame(data);
 	}
 
+	@Test(expected = ClassNotFoundException.class)
+	public void init_exception() throws ClassNotFoundException{
+		Object[] col1 = {"first", "java.lang.Intege", 10, 20, 30};
+		Object[] col2 = {"second", "java.lang.Boolean", true, false, true};
+		Object[] col3 = {"third", "java.lang.String", "abc", "def", "ghi"};
+		Object[] col4 = {"fourth", "java.lang.Double", 1.2, 5.3, -100.02};
+		Object[][] data = {col1, col2, col3, col4};
+		DataFrame df2 = new DataFrame(data);
+	}
+
 	@Test
 	public void numCols() {
-		assertEquals("Get column number test", 4, df.numCols());
+		assertEquals("Get column number test", 5, df.numCols());
 	}
 
 	@Test
@@ -101,18 +114,31 @@ public class DataFrameTest {
 					 Double.valueOf(-100.02),
 					 df.getValue("fourth", 2, Double.class)
 		);
+	}
+
+	@Test
+	public void getValue_element_exception() {
 		assertThrows("Wrong getting type test 1",
-					 ClassCastException.class,
-					 () -> df.getValue("first", 2, Boolean.class)
+				NoSuchElementException.class,
+				() -> df.getValue("col_not_present", 0, Integer.class)
+		);
+	}
+
+	@Test
+	public void getValue_cast_exception() {
+		assertThrows("Wrong getting type test 1",
+				ClassCastException.class,
+				() -> df.getValue("first", 2, Boolean.class)
 		);
 		assertThrows("Wrong getting type test 2",
-					 ClassCastException.class,
-					 () -> df.getValue("third", 3, Integer.class)
+				ClassCastException.class,
+				() -> df.getValue("third", 3, Integer.class)
 		);
 		assertThrows("Wrong getting type test 3",
-					 ClassCastException.class,
-					 () -> df.getValue("second", 1, Double.class)
+				ClassCastException.class,
+				() -> df.getValue("second", 1, Double.class)
 		);
+
 	}
 
 	@Test
@@ -122,9 +148,26 @@ public class DataFrameTest {
 					 Integer.valueOf(40),
 					 df.getValue("first", 3, Integer.class)
 		);
+		assertNull("Add null",
+				df.getValue("second", 3, Boolean.class)
+		);
+		assertNull("Add null",
+				df.getValue("third", 3, String.class)
+		);
+	}
+
+	@Test
+	public void addValue_element_exception() {
+		assertThrows("No such label to add value",
+				NoSuchElementException.class,
+				() -> df.addValue("column_not_pressent", 1)
+		);
+	}
+	@Test
+	public void addValue_cast_exception() {
 		assertThrows("Wrong adding type test",
-					 ClassCastException.class,
-					 () -> df.addValue("second", "test")
+				ClassCastException.class,
+				() -> df.addValue("second", "test")
 		);
 	}
 
@@ -135,9 +178,21 @@ public class DataFrameTest {
 					 Integer.valueOf(15),
 					 df.getValue("first", 1, Integer.class)
 		);
+	}
+
+	@Test
+	public void setValue_element_exception(){
 		assertThrows("Wrong setting type test",
-					 ClassCastException.class,
-					 () -> df.setValue("second", 0, "test")
+				NoSuchElementException.class,
+				() -> df.setValue("column_not_present", 0, "test")
+		);
+	}
+
+	@Test
+	public void setValue_cast_exception(){
+		assertThrows("No such label to set value",
+				ClassCastException.class,
+				() -> df.setValue("second", 0, "test")
 		);
 	}
 
@@ -148,9 +203,21 @@ public class DataFrameTest {
 					 Integer.valueOf(15),
 					 df.getValue("first", 0, Integer.class)
 		);
+	}
+
+	@Test
+	public void replaceValue_element_exception() {
+		assertThrows("No such label to replace value",
+				NoSuchElementException.class,
+				() -> df.replaceValue("column not present", 1.3, "test")
+		);
+	}
+
+	@Test
+	public void replaceValue_cast_exception() {
 		assertThrows("Wrong replacing type test",
-					 ClassCastException.class,
-					 () -> df.replaceValue("second", 1.3, "test")
+				ClassCastException.class,
+				() -> df.replaceValue("second", 1.3, "test")
 		);
 	}
 
@@ -161,9 +228,19 @@ public class DataFrameTest {
 					 "ghi",
 					 df.getValue("third", 1, String.class)
 		);
+	}
+	@Test
+	public void removeValue_element_exception() {
+		assertThrows("No such label to remove value",
+				NoSuchElementException.class,
+				() -> df.removeValue("column_not_present", "test")
+		);
+	}
+	@Test
+	public void removeValue_cast_exception() {
 		assertThrows("Wrong removing type test",
-					 ClassCastException.class,
-					 () -> df.removeValue("second", "test")
+				ClassCastException.class,
+				() -> df.removeValue("second", "test")
 		);
 	}
 
@@ -174,7 +251,27 @@ public class DataFrameTest {
 					 Integer.valueOf(30),
 					 df.getValue("first", 1, Integer.class)
 		);
+		assertNull("Last value",
+				df.getValue("first", 2, Integer.class)
+		);
 	}
+
+	@Test
+	public void removeIdxValue_element_exception() {
+		assertThrows("No such label to remove value",
+				NoSuchElementException.class,
+				() -> df.removeValue("column_not_present", 1)
+		);
+	}
+
+	@Test
+	public void removeIdxValue_idx_exception() {
+		assertThrows("No such label to remove value",
+				IndexOutOfBoundsException.class,
+				() -> df.removeValue("first", 10)
+		);
+	}
+
 
 	@Test
 	public void getColumn() {
@@ -226,58 +323,89 @@ public class DataFrameTest {
 					 Double.valueOf(-100.02),
 					 df.getColumn("fourth", Double.class).get(2)
 		);
+	}
+
+	@Test
+	public void getColumn_element_exception() {
+		assertThrows("No such label to get column",
+				NoSuchElementException.class,
+				() -> df.getColumn("column_not_exist", Boolean.class)
+		);
+	}
+
+	@Test
+	public void getColumn_cast_exception() {
 		assertThrows("Wrong getting type test 1",
-					 ClassCastException.class,
-					 () -> df.getColumn("first", Boolean.class)
+				ClassCastException.class,
+				() -> df.getColumn("first", Boolean.class)
 		);
 		assertThrows("Wrong getting type test 2",
-					 ClassCastException.class,
-					 () -> df.getColumn("third", Integer.class)
+				ClassCastException.class,
+				() -> df.getColumn("third", Integer.class)
 		);
 		assertThrows("Wrong getting type test 3",
-					 ClassCastException.class,
-					 () -> df.getColumn("second", Double.class)
+				ClassCastException.class,
+				() -> df.getColumn("second", Double.class)
 		);
 	}
 
 	@Test
 	public void addColumn() {
-		Double[] column1 = {1.3, null, -23.265, 42.0};
-		Object[] column2 = {1.3, 2.3, "test", 42.0};
+		Object[] column1 = {1, null, -23.265, 4.0};
 
-		df.addColumn("fifth", Double.class, column1);
+		df.addColumn("sixth", Double.class, column1);
 
-		assertEquals("Column number incremented test", 5, df.numCols());
-		assertEquals("Row number unmodified test", 3, df.numRows());
+		assertEquals("Column number incremented test", 6, df.numCols());
+		assertEquals("Row number unmodified test", 4, df.numRows());
 		assertEquals("Added column type test",
 					 Double.class,
-					 df.getType("fifth")
+					 df.getType("sixth")
 		);
 		assertEquals("Get first added value test",
-					 Double.valueOf(1.3),
-					 df.getValue("fifth", 0, Double.class)
+					 Double.valueOf(1),
+					 df.getValue("sixth", 0, Double.class)
 		);
 		assertNull("Get second added value test",
-				   df.getValue("fifth", 1, Double.class)
+				   df.getValue("sixth", 1, Double.class)
 		);
 		assertEquals("Get third added value test",
 					 Double.valueOf(-23.265),
-					 df.getValue("fifth", 2, Double.class)
+					 df.getValue("sixth", 2, Double.class)
 		);
-		assertThrows("Wrong type in added column",
-					 ClassCastException.class,
-					 () -> df.addColumn("sixth", Double.class, column2)
+		assertNull("Get last value null, on first",
+				df.getValue("first", 3, Integer.class)
+		);
+		assertNull("Get last value null, on forth",
+				df.getValue("fourth", 3, Double.class)
 		);
 	}
 
 	@Test
+	public void addColumn_argument_exception() {
+		Object[] column2 = {1.3, 2.3, 18.0, 42.0};
+		assertThrows("Label already exists, choose an other name",
+				IllegalArgumentException.class,
+				() -> df.addColumn("first", Double.class, column2)
+		);
+	}
+
+	@Test
+	public void addColumn_cast_exception() {
+		Object[] column2 = {1.3, 2.3, "test", 42.0};
+		assertThrows("Wrong type in added column",
+				ClassCastException.class,
+				() -> df.addColumn("sixth", Double.class, column2)
+		);
+	}
+
+
+	@Test
 	public void setColumn() {
 		Double[] column1 = {1.3, null, -23.265, 42.0};
-		Object[] column2 = {1.3, 2.3, "test", 42.0};
 
 		df.setColumn("first", Double.class, column1);
 
-		assertEquals("Column number unchanged test", 4, df.numCols());
+		assertEquals("Column number unchanged test", 5, df.numCols());
 		assertEquals("Row number unchanged test", 3, df.numRows());
 		assertEquals("Set column type test", Double.class, df.getType("first"));
 		assertEquals("Get first set value test",
@@ -291,9 +419,23 @@ public class DataFrameTest {
 					 Double.valueOf(-23.265),
 					 df.getValue("first", 2, Double.class)
 		);
+	}
+
+	@Test
+	public void setColumn_element_exception() {
+		Object[] column2 = {1.3, 2.3, 18.0, 42.0};
+		assertThrows("No such label",
+				NoSuchElementException.class,
+				() -> df.setColumn("column_not_present", Double.class, column2)
+		);
+	}
+
+	@Test
+	public void setColumn_cast_exception() {
+		Object[] column2 = {1.3, 2.3, "test", 42.0};
 		assertThrows("Wrong type in set column",
-					 ClassCastException.class,
-					 () -> df.setColumn("first", Double.class, column2)
+				ClassCastException.class,
+				() -> df.setColumn("first", Double.class, column2)
 		);
 	}
 
@@ -301,16 +443,24 @@ public class DataFrameTest {
 	public void removeColumn() {
 		df.removeColumn("second");
 
-		assertEquals("Column number decreased test", 3, df.numCols());
+		assertEquals("Column number decreased test", 4, df.numCols());
 		assertEquals("Row number unchanged test", 3, df.numRows());
 	}
 
 	@Test
+	public void removeColumn_element_exception() {
+		assertThrows("No such label",
+				NoSuchElementException.class,
+				() -> df.removeColumn("column not rpesent")
+		);
+	}
+
+	@Test
 	public void print() {
-		String msg = "third\tsecond\tfourth\tfirst\t\n" +
-					 "abc\ttrue\t1.2\t10\t\n" +
-					 "def\tfalse\t5.3\t20\t\n" +
-					 "ghi\ttrue\t-100.02\t30\t\n";
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\t\n" +
+					 "abc\ttrue\t1\t1.2\t10\t\n" +
+					 "def\tfalse\t5\t5.3\t20\t\n" +
+					 "ghi\ttrue\t140\t-100.02\t30\t\n";
 		assertEquals("Print message test", msg, df.toString());
 	}
 }
