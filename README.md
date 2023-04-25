@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Panda Library</title>
   </head>
   <body>
     <h1>Panda Library</h1>
