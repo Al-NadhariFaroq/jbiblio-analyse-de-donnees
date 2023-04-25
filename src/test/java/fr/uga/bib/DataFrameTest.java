@@ -551,7 +551,6 @@ public class DataFrameTest {
 		assertEquals("Column number decreased test", 6, df.numCols());
 
 		df.addValue("first",  10);
-
 		df.addValue("third",   "true");
 		df.addValue("third",   "true");
 		df.addValue("third",   "true");
@@ -560,7 +559,7 @@ public class DataFrameTest {
 
 		System.out.println(df.toString());
 
-		assertEquals("Row number changed test", 6, df.numRows());
+		assertEquals("Row number changed test", 9, df.numRows());
 
 		df.removeColumn("first");
 
@@ -589,7 +588,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMinLong() throws InvalidTypeException {
+    public void testGetMinLong() {
 
         // Call the getMin method with the column name
         long result = df.getMin("ninth");
@@ -599,7 +598,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMinDouble() throws InvalidTypeException {
+    public void testGetMinDouble() {
 
         // Call the getMin method with the column name
         double result = df.getMin("fourth");
@@ -610,7 +609,7 @@ public class DataFrameTest {
 
 
     @Test
-    public void testGetMinFloat() throws InvalidTypeException {
+    public void testGetMinFloat()  {
 
         // Call the getMin method with the column name
         float result = df.getMin("eighth");
@@ -620,7 +619,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMaxInteger() throws InvalidTypeException {
+    public void testGetMaxInteger() {
 
         // Call the getMax method with the column name
         int result = df.getMax("first");
@@ -630,7 +629,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMaxLong() throws InvalidTypeException {
+    public void testGetMaxLong()  {
 
         // Call the getMax method with the column name
         long result = df.getMax("ninth");
@@ -640,7 +639,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMaxDouble() throws InvalidTypeException {
+    public void testGetMaxDouble() {
 
         // Call the getMax method with the column name
         double result = df.getMax("fourth");
@@ -650,7 +649,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMaxFloat() throws InvalidTypeException {
+    public void testGetMaxFloat()  {
 
         // Call the getMin method with the column name
         float result = df.getMax("eighth");
@@ -660,7 +659,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMeanInteger() throws InvalidTypeException {
+    public void testGetMeanInteger() {
 
         // Call the getMean method with the column name
         int result = df.getMean("first");
@@ -670,7 +669,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMeanLong() throws InvalidTypeException {
+    public void testGetMeanLong()  {
 
         // Call the getMean method with the column name
         long result = df.getMean("ninth");
@@ -680,7 +679,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMeanDouble() throws InvalidTypeException {
+    public void testGetMeanDouble()  {
 
         // Call the getMean method with the column name
         double result = df.getMean("fourth");
@@ -691,7 +690,7 @@ public class DataFrameTest {
 
 
     @Test
-    public void testGetMeanFloat() throws InvalidTypeException {
+    public void testGetMeanFloat()  {
 
         // Call the getMean method with the column name
         float result = df.getMean("eighth");
@@ -701,7 +700,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMedianInteger() throws InvalidTypeException {
+    public void testGetMedianInteger()  {
 
         // Call the getMedian method with the column name
         int result = df.getMedian("first");
@@ -711,7 +710,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMedianLong() throws InvalidTypeException {
+    public void testGetMedianLong() {
 
         // Call the getMedian method with the column name
         long result = df.getMedian("ninth");
@@ -720,7 +719,7 @@ public class DataFrameTest {
         assertEquals(5.0, result, 0.0);
     }
     @Test
-    public void testGetMedianLong2() throws InvalidTypeException {
+    public void testGetMedianLong2() {
 
         // Call the getMedian method with the column name
         int result = dfCopy.getMedian("first");
@@ -730,7 +729,7 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testGetMedianDouble() throws InvalidTypeException {
+    public void testGetMedianDouble()  {
 
         // Call the getMedian method with the column name
         double result = df.getMedian("fourth");
@@ -741,7 +740,7 @@ public class DataFrameTest {
 
 
     @Test
-    public void testGetMedianFloat() throws InvalidTypeException {
+    public void testGetMedianFloat()  {
 
         // Call the getMedian method with the column name
         float result = df.getMedian("eighth");
