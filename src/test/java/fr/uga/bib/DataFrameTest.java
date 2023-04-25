@@ -134,72 +134,72 @@ public class DataFrameTest {
 	@Test
 	public void getType() {
 		assertEquals("Get first column type test",
-					 Integer.class,
-					 df.getType("first")
+				Integer.class,
+				df.getType("first")
 		);
 		assertEquals("Get second column type test",
-					 Boolean.class,
-					 df.getType("second")
+				Boolean.class,
+				df.getType("second")
 		);
 		assertEquals("Get third column type test",
-					 String.class,
-					 df.getType("third")
+				String.class,
+				df.getType("third")
 		);
 		assertEquals("Get fourth column type test",
-					 Double.class,
-					 df.getType("fourth")
+				Double.class,
+				df.getType("fourth")
 		);
 	}
 
 	@Test
 	public void getValue() {
 		assertEquals("Get first integer value test",
-					 Integer.valueOf(10),
-					 df.getValue("first", 0, Integer.class)
+				Integer.valueOf(10),
+				df.getValue("first", 0, Integer.class)
 		);
 		assertEquals("Get second integer value test",
-					 Integer.valueOf(20),
-					 df.getValue("first", 1, Integer.class)
+				Integer.valueOf(20),
+				df.getValue("first", 1, Integer.class)
 		);
 		assertEquals("Get third integer value test",
-					 Integer.valueOf(30),
-					 df.getValue("first", 2, Integer.class)
+				Integer.valueOf(30),
+				df.getValue("first", 2, Integer.class)
 		);
 		assertEquals("Get first boolean value test",
-					 Boolean.TRUE,
-					 df.getValue("second", 0, Boolean.class)
+				Boolean.TRUE,
+				df.getValue("second", 0, Boolean.class)
 		);
 		assertEquals("Get second boolean value test",
-					 Boolean.FALSE,
-					 df.getValue("second", 1, Boolean.class)
+				Boolean.FALSE,
+				df.getValue("second", 1, Boolean.class)
 		);
 		assertEquals("Get third boolean value test",
-					 Boolean.TRUE,
-					 df.getValue("second", 2, Boolean.class)
+				Boolean.TRUE,
+				df.getValue("second", 2, Boolean.class)
 		);
 		assertEquals("Get first string value test",
-					 "abc",
-					 df.getValue("third", 0, String.class)
+				"abc",
+				df.getValue("third", 0, String.class)
 		);
 		assertEquals("Get second string value test",
-					 "def",
-					 df.getValue("third", 1, String.class)
+				"def",
+				df.getValue("third", 1, String.class)
 		);
 		assertEquals("Get third string value test",
-					 "ghi",
-					 df.getValue("third", 2, String.class)
+				"ghi",
+				df.getValue("third", 2, String.class)
 		);
 		assertEquals("Get first double value test",
-					 Double.valueOf(1.2),
-					 df.getValue("fourth", 0, Double.class)
+				Double.valueOf(1.2),
+				df.getValue("fourth", 0, Double.class)
 		);
 		assertEquals("Get second double value test",
-					 Double.valueOf(5.3),
-					 df.getValue("fourth", 1, Double.class)
+				Double.valueOf(5.3),
+				df.getValue("fourth", 1, Double.class)
 		);
 		assertEquals("Get third double value test",
-					 Double.valueOf(-100.02),
-					 df.getValue("fourth", 2, Double.class)
+				Double.valueOf(-100.02),
+				df.getValue("fourth", 2, Double.class)
 		);
 	}
 
@@ -232,8 +232,8 @@ public class DataFrameTest {
 	public void addValue() {
 		df.addValue("first", 40);
 		assertEquals("Add value test",
-					 Integer.valueOf(40),
-					 df.getValue("first", 3, Integer.class)
+				Integer.valueOf(40),
+				df.getValue("first", 3, Integer.class)
 		);
 		assertNull("Add null",
 				df.getValue("second", 3, Boolean.class)
@@ -250,6 +250,7 @@ public class DataFrameTest {
 				() -> df.addValue("column_not_pressent", 1)
 		);
 	}
+
 	@Test
 	public void addValue_cast_exception() {
 		assertThrows("Wrong adding type test",
@@ -262,8 +263,8 @@ public class DataFrameTest {
 	public void setValue() {
 		df.setValue("first", 1, 15);
 		assertEquals("Set value test",
-					 Integer.valueOf(15),
-					 df.getValue("first", 1, Integer.class)
+				Integer.valueOf(15),
+				df.getValue("first", 1, Integer.class)
 		);
 	}
 
@@ -287,8 +288,8 @@ public class DataFrameTest {
 	public void replaceValue() {
 		df.replaceValue("first", 10, 15);
 		assertEquals("Replace value test",
-					 Integer.valueOf(15),
-					 df.getValue("first", 0, Integer.class)
+				Integer.valueOf(15),
+				df.getValue("first", 0, Integer.class)
 		);
 	}
 
@@ -312,10 +313,11 @@ public class DataFrameTest {
 	public void removeValue() {
 		df.removeValue("third", "def");
 		assertEquals("Remove value test",
-					 "ghi",
-					 df.getValue("third", 1, String.class)
+				"ghi",
+				df.getValue("third", 1, String.class)
 		);
 	}
+
 	@Test
 	public void removeValue_element_exception() {
 		assertThrows("No such label to remove value",
@@ -323,6 +325,7 @@ public class DataFrameTest {
 				() -> df.removeValue("column_not_present", "test")
 		);
 	}
+
 	@Test
 	public void removeValue_cast_exception() {
 		assertThrows("Wrong removing type test",
@@ -335,8 +338,8 @@ public class DataFrameTest {
 	public void removeIdxValue() {
 		df.removeValue("first", 1);
 		assertEquals("Set value test",
-					 Integer.valueOf(30),
-					 df.getValue("first", 1, Integer.class)
+				Integer.valueOf(30),
+				df.getValue("first", 1, Integer.class)
 		);
 		assertNull("Last value",
 				df.getValue("first", 2, Integer.class)
@@ -363,52 +366,52 @@ public class DataFrameTest {
 	@Test
 	public void getColumn() {
 		assertEquals("Get first value of first column test",
-					 Integer.valueOf(10),
-					 df.getColumn("first", Integer.class).get(0)
+				Integer.valueOf(10),
+				df.getColumn("first", Integer.class).get(0)
 		);
 		assertEquals("Get second value of first column test",
-					 Integer.valueOf(20),
-					 df.getColumn("first", Integer.class).get(1)
+				Integer.valueOf(20),
+				df.getColumn("first", Integer.class).get(1)
 		);
 		assertEquals("Get third value of first column test",
-					 Integer.valueOf(30),
-					 df.getColumn("first", Integer.class).get(2)
+				Integer.valueOf(30),
+				df.getColumn("first", Integer.class).get(2)
 		);
 		assertEquals("Get first value of second column test",
-					 Boolean.TRUE,
-					 df.getColumn("second", Boolean.class).get(0)
+				Boolean.TRUE,
+				df.getColumn("second", Boolean.class).get(0)
 		);
 		assertEquals("Get second value of second column test",
-					 Boolean.FALSE,
-					 df.getColumn("second", Boolean.class).get(1)
+				Boolean.FALSE,
+				df.getColumn("second", Boolean.class).get(1)
 		);
 		assertEquals("Get third value of second column test",
-					 Boolean.TRUE,
-					 df.getColumn("second", Boolean.class).get(2)
+				Boolean.TRUE,
+				df.getColumn("second", Boolean.class).get(2)
 		);
 		assertEquals("Get first value of third column test",
-					 "abc",
-					 df.getColumn("third", String.class).get(0)
+				"abc",
+				df.getColumn("third", String.class).get(0)
 		);
 		assertEquals("Get second value of third column test",
-					 "def",
-					 df.getColumn("third", String.class).get(1)
+				"def",
+				df.getColumn("third", String.class).get(1)
 		);
 		assertEquals("Get third value of third column test",
-					 "ghi",
-					 df.getColumn("third", String.class).get(2)
+				"ghi",
+				df.getColumn("third", String.class).get(2)
 		);
 		assertEquals("Get first value of fourth column test",
-					 Double.valueOf(1.2),
-					 df.getColumn("fourth", Double.class).get(0)
+				Double.valueOf(1.2),
+				df.getColumn("fourth", Double.class).get(0)
 		);
 		assertEquals("Get second value of fourth column test",
-					 Double.valueOf(5.3),
-					 df.getColumn("fourth", Double.class).get(1)
+				Double.valueOf(5.3),
+				df.getColumn("fourth", Double.class).get(1)
 		);
 		assertEquals("Get third value of fourth column test",
-					 Double.valueOf(-100.02),
-					 df.getColumn("fourth", Double.class).get(2)
+				Double.valueOf(-100.02),
+				df.getColumn("fourth", Double.class).get(2)
 		);
 	}
 
@@ -445,19 +448,19 @@ public class DataFrameTest {
 		assertEquals("Column number incremented test", 8, df.numCols());
 		assertEquals("Row number unmodified test", 4, df.numRows());
 		assertEquals("Added column type test",
-					 Double.class,
-					 df.getType("sixth")
+				Double.class,
+				df.getType("sixth")
 		);
 		assertEquals("Get first added value test",
-					 Double.valueOf(1),
-					 df.getValue("sixth", 0, Double.class)
+				Double.valueOf(1),
+				df.getValue("sixth", 0, Double.class)
 		);
 		assertNull("Get second added value test",
-				   df.getValue("sixth", 1, Double.class)
+				df.getValue("sixth", 1, Double.class)
 		);
 		assertEquals("Get third added value test",
-					 Double.valueOf(-23.265),
-					 df.getValue("sixth", 2, Double.class)
+				Double.valueOf(-23.265),
+				df.getValue("sixth", 2, Double.class)
 		);
 		assertNull("Get last value null, on first",
 				df.getValue("first", 3, Integer.class)
@@ -496,15 +499,15 @@ public class DataFrameTest {
 		assertEquals("Row number unchanged test", 3, df.numRows());
 		assertEquals("Set column type test", Double.class, df.getType("first"));
 		assertEquals("Get first set value test",
-					 Double.valueOf(1.3),
-					 df.getValue("first", 0, Double.class)
+				Double.valueOf(1.3),
+				df.getValue("first", 0, Double.class)
 		);
 		assertNull("Get second set value test",
-				   df.getValue("first", 1, Double.class)
+				df.getValue("first", 1, Double.class)
 		);
 		assertEquals("Get third set value test",
-					 Double.valueOf(-23.265),
-					 df.getValue("first", 2, Double.class)
+				Double.valueOf(-23.265),
+				df.getValue("first", 2, Double.class)
 		);
 	}
 
@@ -533,6 +536,38 @@ public class DataFrameTest {
         assertEquals("Column number decreased test", 6, df.numCols());
         assertEquals("Row number unchanged test", 3, df.numRows());
     }
+
+	@Test
+	public void removeColumnMax() {
+		df.addValue("second",  true);
+		df.addValue("second",  true);
+		df.addValue("second",  true);
+		df.addValue("second",  true);
+		assertEquals("Row number changed test", 7, df.numRows());
+		System.out.println(df.toString());
+		df.removeColumn("second");
+		System.out.println(df.toString());
+		assertEquals("Row number unchanged test", 3, df.numRows());
+		assertEquals("Column number decreased test", 6, df.numCols());
+
+		df.addValue("first",  10);
+
+		df.addValue("third",   "true");
+		df.addValue("third",   "true");
+		df.addValue("third",   "true");
+		df.addValue("third",   "true");
+		df.addValue("third",   "true");
+
+		System.out.println(df.toString());
+
+		assertEquals("Row number changed test", 6, df.numRows());
+
+		df.removeColumn("first");
+
+		assertEquals("Row number unchanged test", 4, df.numRows());
+		assertEquals("Column number decreased test", 6, df.numCols());
+
+	}
 
     @Test
     public void print() {
@@ -769,7 +804,7 @@ public class DataFrameTest {
 				"DP\tfalse\t5\t7.12\t90\t140\t1.3\t\n" +
 				"MS\ttrue\t140\t10.0\t100\t45\t58.2\t\n" +
 				"null\tnull\t45\tnull\tnull\tnull\tnull\t\n";
-		assertEquals("Print message test", msg, df.showLastLines());
+		assertEquals("Print message test", msg, df.tail(5));
 	}
 
 	@Test
@@ -789,6 +824,42 @@ public class DataFrameTest {
 				"ghi\ttrue\t140\t-100.02\t30\t9\t-100.02\t\n" +
 				"kmp\ttrue\t1\t4.5\t40\t1\t1.3\t\n" +
 				"MB\ttrue\t5\t6.021\t50\t5\t58.2\t\n";
-		assertEquals("Print message test", msg, df.showFirstLines());
+		assertEquals("Print message test", msg, df.head(5));
 	}
+	@Test
+	public void printNFirstLines() throws ClassNotFoundException {
+		Object[] col1 = {"first", "Integer", 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+		Object[] col2 = {"second", "Boolean", true, false, true, true, true, false, false, false, false, true};
+		Object[] col3 = {"third", "String", "abc", "def", "ghi", "kmp", "MB", "MF", "SW:D", "SW:¨P", "DP", "MS"};
+		Object[] col4 = {"fourth", "Double", 1.2, 5.3, -100.02, 4.5, 6.021, 8.7, 639.0, 589.0, 7.12, 10.0};
+		Object[] col5 = {"eighth", "Float", 1.2f, 5.3f, -100.02f, 1.3f, 58.2f, 89.7f, null, -100.02f, 1.3f, 58.2f};
+		Object[] col6 = {"ninth", "Long", 1L, 5L, 9L, 1L, 5L, 140L, 1L, 5L, 140L, 45L};
+		Object[] col7 = {"fifth", "Long", 1L, 5L, 140L, 1L, 5L, 140L, 45L, 1L, 5L, 140L, 45L};
+		Object[][] data = {col1, col2, col3, col4, col5, col6, col7};
+		DataFrame df = new DataFrame(data);
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\tninth\teighth\t\n" +
+				"abc\ttrue\t1\t1.2\t10\t1\t1.2\t\n" +
+				"def\tfalse\t5\t5.3\t20\t5\t5.3\t\n" +
+				"ghi\ttrue\t140\t-100.02\t30\t9\t-100.02\t\n";
+		assertEquals("Print message test", msg, df.head(3));
+	}
+
+	@Test
+	public void printNLastLines() throws ClassNotFoundException {
+		Object[] col1 = {"first", "Integer", 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+		Object[] col2 = {"second", "Boolean", true, false, true, true, true, false, false, false, false, true};
+		Object[] col3 = {"third", "String", "abc", "def", "ghi", "kmp", "MB", "MF", "SW:D", "SW:¨P", "DP", "MS"};
+		Object[] col4 = {"fourth", "Double", 1.2, 5.3, -100.02, 4.5, 6.021, 8.7, 639.0, 589.0, 7.12, 10.0};
+		Object[] col5 = {"eighth", "Float", 1.2f, 5.3f, -100.02f, 1.3f, 58.2f, 89.7f, null, -100.02f, 1.3f, 58.2f};
+		Object[] col6 = {"ninth", "Long", 1L, 5L, 9L, 1L, 5L, 140L, 1L, 5L, 140L, 45L};
+		Object[] col7 = {"fifth", "Long", 1L, 5L, 140L, 1L, 5L, 140L, 45L, 1L, 5L, 140L, 45L};
+		Object[][] data = {col1, col2, col3, col4, col5, col6,col7};
+		DataFrame df = new DataFrame(data);
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\tninth\teighth\t\n" +
+				"DP\tfalse\t5\t7.12\t90\t140\t1.3\t\n" +
+				"MS\ttrue\t140\t10.0\t100\t45\t58.2\t\n" +
+				"null\tnull\t45\tnull\tnull\tnull\tnull\t\n";
+		assertEquals("Print message test", msg, df.tail(3));
+	}
+
 }

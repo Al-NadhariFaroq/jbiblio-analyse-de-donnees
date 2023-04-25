@@ -24,12 +24,6 @@ public class DataFrame {
 	private final String typeNoMatchColType = "Invalid type '%s': does not match the column type '%s'";
 	private final String valNoMatchColType= "Invalid value type '%s': does not match the column type '%s'";
 
-
-	/**
-	 *
-	 * @param inputData
-	 * @throws ClassNotFoundException
-	 */
 	public DataFrame(Object[][] inputData) throws ClassNotFoundException {
 		dataFrame = new Hashtable<>();
 		typeFrame = new Hashtable<>();
@@ -37,13 +31,8 @@ public class DataFrame {
 		initialize(inputData);
 	}
 
-	/**
-	 *
-	 * @param filename
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	public DataFrame(String filename)throws IOException, ClassNotFoundException {
+	public DataFrame(String filename)
+	throws IOException, ClassNotFoundException {
 		dataFrame = new Hashtable<>();
 		typeFrame = new Hashtable<>();
 
@@ -73,10 +62,6 @@ public class DataFrame {
 		br.close();
 	}
 
-	/**
-	 *
-	 * @param inputData
-	 */
 	private void initialize(Object[][] inputData) {
 		for (Object[] column : inputData) {
 			String label = String.valueOf(column[0]);
@@ -87,13 +72,6 @@ public class DataFrame {
 		}
 	}
 
-	/**
-	 *
-	 * @param type
-	 * @param value
-	 * @return
-	 * @param <T>
-	 */
 	private <T> T convert(Class<T> type, Object value) {
 		if (value == null) {
 			return null;
@@ -119,23 +97,18 @@ public class DataFrame {
 		};
 	}
 
-	/**
-	 *
-	 * @param type
-	 * @param value
-	 * @return
-	 * @param <T>
-	 */
 	private <T> T convertBoolean(Class<T> type, Boolean value) {
 		String typeName = type.getSimpleName();
 		T convertValue = (T) switch (typeName.toLowerCase()) {
 			case "boolean", "bool" -> value;
 			case "byte" -> value ? getOne(Byte.class) : getZero(Byte.class);
 			case "short" -> value ? getOne(Short.class) : getZero(Short.class);
-			case "integer" ->value ? getOne(Integer.class) : getZero(Integer.class);
+			case "integer" ->
+					value ? getOne(Integer.class) : getZero(Integer.class);
 			case "long" -> value ? getOne(Long.class) : getZero(Long.class);
 			case "float" -> value ? getOne(Float.class) : getZero(Float.class);
-			case "double" ->value ? getOne(Double.class) : getZero(Double.class);
+			case "double" ->
+					value ? getOne(Double.class) : getZero(Double.class);
 			case "character", "char" -> value ? '1' : '0';
 			case "string" -> value ? "true" : "false";
 			default -> null;
@@ -379,14 +352,14 @@ public class DataFrame {
 	public <T> T getValue(String label, int idx, Class<T> type) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
 		if (!type.equals(colType)) {
 			throw new ClassCastException(String.format(typeNoMatchColType,
-													   type,
-													   colType
+					type,
+					colType
 			));
 		}
 		Object value = dataFrame.get(label).get(idx);
@@ -413,14 +386,17 @@ public class DataFrame {
 	public <T> void addValue(String label, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
 		try {
 			dataFrame.get(label).add(colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,value.getClass(),colType));
+			throw new ClassCastException(String.format(valNoMatchColType,
+					value.getClass(),
+					colType
+			));
 		}
 
 		Iterator<String> labelIt = dataFrame.keys().asIterator();
@@ -442,14 +418,17 @@ public class DataFrame {
 	public <T> void setValue(String label, int idx, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
 		try {
 			dataFrame.get(label).set(idx, colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType, value.getClass(),colType));
+			throw new ClassCastException(String.format(valNoMatchColType,
+					value.getClass(),
+					colType
+			));
 		}
 	}
 
@@ -463,7 +442,7 @@ public class DataFrame {
 	public <T> void replaceValue(String label, T oldValue, T newValue) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
@@ -471,7 +450,10 @@ public class DataFrame {
 			int idx = dataFrame.get(label).indexOf(oldValue);
 			dataFrame.get(label).set(idx, colType.cast(newValue));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,newValue.getClass(), colType));
+			throw new ClassCastException(String.format(valNoMatchColType,
+					newValue.getClass(),
+					colType
+			));
 		}
 	}
 
@@ -484,14 +466,17 @@ public class DataFrame {
 	public <T> void removeValue(String label, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
 		try {
 			dataFrame.get(label).remove(colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType, value.getClass(),colType));
+			throw new ClassCastException(String.format(valNoMatchColType,
+					value.getClass(),
+					colType
+			));
 		}
 		dataFrame.get(label).add(colType.cast(null));
 	}
@@ -504,7 +489,7 @@ public class DataFrame {
 	public void removeValue(String label, int idx) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		dataFrame.get(label).remove(idx);
@@ -521,14 +506,14 @@ public class DataFrame {
 	public <T> List<T> getColumn(String label, Class<T> type) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		Class<?> colType = getType(label);
 		if (!type.equals(colType)) {
 			throw new ClassCastException(String.format(typeNoMatchColType,
-													   type,
-													   colType
+					type,
+					colType
 			));
 		}
 		List<T> out = new ArrayList<>();
@@ -548,7 +533,9 @@ public class DataFrame {
 	public <T> void addColumn(String label, Class<T> type, Object[] data) {
 		int lengthActual = numRows();
 		if (dataFrame.containsKey(label)) {
-			throw new IllegalArgumentException(String.format(existingColLbl, label));
+			throw new IllegalArgumentException(String.format(existingColLbl,
+					label
+			));
 		}
 		List<Object> colData = new ArrayList<>();
 		for (Object value : data) {
@@ -590,14 +577,17 @@ public class DataFrame {
 	public <T> void setColumn(String label, Class<T> type, Object[] data) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
+					label
 			));
 		}
 		for (Object value : data) {
 			try {
 				type.cast(value);
 			} catch (ClassCastException e) {
-				throw new ClassCastException(String.format(valNoMatchColType,value.getClass(),type.getName()));
+				throw new ClassCastException(String.format(valNoMatchColType,
+						value.getClass(),
+						type.getName()
+				));
 			}
 		}
 		dataFrame.replace(label, new ArrayList<>(Arrays.asList(data)));
@@ -610,9 +600,37 @@ public class DataFrame {
 	 */
 	public void removeColumn(String label) {
 		if (!dataFrame.containsKey(label)) {
-			throw new NoSuchElementException(String.format(noExistentColLbl, label));
+			throw new NoSuchElementException(String.format(noExistentColLbl,
+					label
+			));
 		}
 		dataFrame.remove(label);
+		int nbRows = numRows() - 1;
+		int j = nbRows;
+		int max = 0;
+		Iterator<String> labelIt = dataFrame.keys().asIterator();
+		labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			String lb = labelIt.next();
+			Class<?> type = getType(lb);
+			while(getValue(lb, j, type) == null && j > 0){
+				j--;
+			}
+			if(j == numRows()){
+				return;
+			} else if (j > max){
+				max = j;
+			}
+		}
+
+		labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			String lb = labelIt.next();
+			for(int i = nbRows; i > max; i--)
+				dataFrame.get(lb).remove(i);
+			labelIt.next();
+		}
+
 	}
 
 
@@ -636,46 +654,6 @@ public class DataFrame {
 			txt.append("\n");
 		}
 		return txt.toString();
-	}
-	/**********************************************************************************/
-	/*********************************** Display *************************************/
-	/**********************************************************************************/
-
-	/**
-	 * Prints the first n rows of the dataFrame.
-	 * @param n The number of rows to print from the start of the dataFrame.
-	 */
-	public void head(int n) {
-
-	}
-
-	/**
-	 * Prints the first 5 rows of the dataFrame.
-	 */
-	public void head() {
-		head(5);
-	}
-
-	/**
-	 * Prints the last n rows of the dataFrame.
-	 * @param n The number of rows to print from the end of the dataFrame.
-	 */
-	public void tail(int n) {
-
-	}
-
-	/**
-	 * Prints the last 5 rows of the dataFrame.
-	 */
-	public void tail() {
-		tail(5);
-	}
-
-	/**
-	 * Prints the entire dataFrame.
-	 */
-	public void print() {
-
 	}
 
 
@@ -756,8 +734,7 @@ public class DataFrame {
 		double sum = 0.0;
 		for (Object value : values) {
 			switch (type) {
-				case "java.lang.Integer" ->
-						sum += ((Integer) value).doubleValue();
+				case "java.lang.Integer" -> sum += ((Integer) value).doubleValue();
 				case "java.lang.Long" -> sum += ((Long) value).doubleValue();
 				case "java.lang.Float" -> sum += ((Float) value).doubleValue();
 				case "java.lang.Double" -> sum += (Double) value;
@@ -771,12 +748,6 @@ public class DataFrame {
 		return this.returnType(type, mean);
 	}
 
-	/**
-	 * Returns the median of a numeric column.
-	 * @param colName The name of the column.
-	 * @return The median value of the column as a Number.
-	 * @throws IllegalArgumentException if the column type is not numeric.
-	 */
 	public <T extends Number> T getMedian(String colName) {
 		List values = this.checkColumn(colName);
 		String type = this.typeFrame.get(colName);
@@ -788,7 +759,7 @@ public class DataFrame {
 			int middleIndex1 = n / 2;
 			int middleIndex2 = middleIndex1 - 1;
 			result = ((Number) values.get(middleIndex1)).doubleValue() +
-					 ((Number) values.get(middleIndex2)).doubleValue() / 2.0;
+					((Number) values.get(middleIndex2)).doubleValue() / 2.0;
 		} else {
 			int middleIndex = n / 2;
 			result = ((Number) values.get(middleIndex)).doubleValue();
@@ -838,9 +809,9 @@ public class DataFrame {
 			String type = this.typeFrame.get(colName);
 			try {
 				if (type.equals("java.lang.Integer") ||
-					type.equals("java.lang.Long") ||
-					type.equals("java.lang.Float") ||
-					type.equals("java.lang.Double")) {
+						type.equals("java.lang.Long") ||
+						type.equals("java.lang.Float") ||
+						type.equals("java.lang.Double")) {
 					val = this.getColumn(colName, Class.forName(type));
 				} else {
 					String msg = String.format(unsupportedType, type);
@@ -856,9 +827,16 @@ public class DataFrame {
 		}
 		return val;
 	}
+	/**********************************************************************************/
+	/*********************************** Display *************************************/
+	/**********************************************************************************/
 
-	public String showLastLines(){
-		if(numRows() < 5){
+	/**
+	 * Prints the first n rows of the dataFrame.
+	 * @param n The number of rows to print from the start of the dataFrame.
+	 */
+	public String head(int n) {
+		if(numRows() < n){
 			return toString();
 		} else {
 			StringBuilder txt = new StringBuilder();
@@ -868,7 +846,42 @@ public class DataFrame {
 				txt.append(labelIt.next()).append("\t");
 			}
 			txt.append("\n");
-			int j = numRows() - 5;
+			for (int i = 0; i < n; i++) {
+				labelIt = dataFrame.keys().asIterator();
+				while (labelIt.hasNext()) {
+					String label = labelIt.next();
+					Class<?> type = getType(label);
+					txt.append(getValue(label, i, type)).append("\t");
+				}
+				txt.append("\n");
+			}
+			return txt.toString();
+		}
+	}
+
+	/**
+	 * Prints the first 5 rows of the dataFrame.
+	 */
+	public String head() {
+		return head(5);
+	}
+
+	/**
+	 * Prints the last n rows of the dataFrame.
+	 * @param n The number of rows to print from the end of the dataFrame.
+	 */
+	public String tail(int n) {
+		if(numRows() < n){
+			return toString();
+		} else {
+			StringBuilder txt = new StringBuilder();
+
+			Iterator<String> labelIt = dataFrame.keys().asIterator();
+			while (labelIt.hasNext()) {
+				txt.append(labelIt.next()).append("\t");
+			}
+			txt.append("\n");
+			int j = numRows() - n;
 			for (int i = j; i < numRows(); i++) {
 				labelIt = dataFrame.keys().asIterator();
 				while (labelIt.hasNext()) {
@@ -882,29 +895,18 @@ public class DataFrame {
 		}
 	}
 
-	public String showFirstLines(){
-		if(numRows() < 5){
-			return toString();
-		} else {
-			StringBuilder txt = new StringBuilder();
+	/**
+	 * Prints the last 5 rows of the dataFrame.
+	 */
+	public String tail() {
+		return tail(5);
+	}
 
-			Iterator<String> labelIt = dataFrame.keys().asIterator();
-			while (labelIt.hasNext()) {
-				txt.append(labelIt.next()).append("\t");
-			}
-			txt.append("\n");
-			int nbRows = numRows();
-			for (int i = 0; i < 5; i++) {
-				labelIt = dataFrame.keys().asIterator();
-				while (labelIt.hasNext()) {
-					String label = labelIt.next();
-					Class<?> type = getType(label);
-					txt.append(getValue(label, i, type)).append("\t");
-				}
-				txt.append("\n");
-			}
-			return txt.toString();
-		}
+	/**
+	 * Prints the entire dataFrame.
+	 */
+	public void print() {
+
 	}
 
 	/**
