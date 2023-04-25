@@ -589,6 +589,56 @@ public class DataFrame {
 		return val;
 	}
 
+	public String showLastLines(){
+		if(numRows() < 5){
+			return toString();
+		} else {
+			StringBuilder txt = new StringBuilder();
+
+			Iterator<String> labelIt = dataFrame.keys().asIterator();
+			while (labelIt.hasNext()) {
+				txt.append(labelIt.next()).append("\t");
+			}
+			txt.append("\n");
+			int j = numRows() - 5;
+			for (int i = j; i < numRows(); i++) {
+				labelIt = dataFrame.keys().asIterator();
+				while (labelIt.hasNext()) {
+					String label = labelIt.next();
+					Class<?> type = getType(label);
+					txt.append(getValue(label, i, type)).append("\t");
+				}
+				txt.append("\n");
+			}
+			return txt.toString();
+		}
+	}
+
+	public String showFirstLines(){
+		if(numRows() < 5){
+			return toString();
+		} else {
+			StringBuilder txt = new StringBuilder();
+
+			Iterator<String> labelIt = dataFrame.keys().asIterator();
+			while (labelIt.hasNext()) {
+				txt.append(labelIt.next()).append("\t");
+			}
+			txt.append("\n");
+			int nbRows = numRows();
+			for (int i = 0; i < 5; i++) {
+				labelIt = dataFrame.keys().asIterator();
+				while (labelIt.hasNext()) {
+					String label = labelIt.next();
+					Class<?> type = getType(label);
+					txt.append(getValue(label, i, type)).append("\t");
+				}
+				txt.append("\n");
+			}
+			return txt.toString();
+		}
+	}
+
 	protected <T> T returnType(String type, double value) {
 		return switch (type) {
 			case "java.lang.Integer" -> (T) Integer.valueOf((int) value);

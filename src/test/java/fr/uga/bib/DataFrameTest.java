@@ -751,4 +751,44 @@ public class DataFrameTest {
 		);
 	}
 
+
+	@Test
+	public void printLastLines() throws ClassNotFoundException {
+		Object[] col1 = {"first", "Integer", 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+		Object[] col2 = {"second", "Boolean", true, false, true, true, true, false, false, false, false, true};
+		Object[] col3 = {"third", "String", "abc", "def", "ghi", "kmp", "MB", "MF", "SW:D", "SW:¨P", "DP", "MS"};
+		Object[] col4 = {"fourth", "Double", 1.2, 5.3, -100.02, 4.5, 6.021, 8.7, 639.0, 589.0, 7.12, 10.0};
+		Object[] col5 = {"eighth", "Float", 1.2f, 5.3f, -100.02f, 1.3f, 58.2f, 89.7f, null, -100.02f, 1.3f, 58.2f};
+		Object[] col6 = {"ninth", "Long", 1L, 5L, 9L, 1L, 5L, 140L, 1L, 5L, 140L, 45L};
+		Object[] col7 = {"fifth", "Long", 1L, 5L, 140L, 1L, 5L, 140L, 45L, 1L, 5L, 140L, 45L};
+		Object[][] data = {col1, col2, col3, col4, col5, col6,col7};
+		DataFrame df = new DataFrame(data);
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\tninth\teighth\t\n" +
+				"SW:D\tfalse\t45\t639.0\t70\t1\tnull\t\n" +
+				"SW:¨P\tfalse\t1\t589.0\t80\t5\t-100.02\t\n" +
+				"DP\tfalse\t5\t7.12\t90\t140\t1.3\t\n" +
+				"MS\ttrue\t140\t10.0\t100\t45\t58.2\t\n" +
+				"null\tnull\t45\tnull\tnull\tnull\tnull\t\n";
+		assertEquals("Print message test", msg, df.showLastLines());
+	}
+
+	@Test
+	public void printFirstLines() throws ClassNotFoundException {
+		Object[] col1 = {"first", "Integer", 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+		Object[] col2 = {"second", "Boolean", true, false, true, true, true, false, false, false, false, true};
+		Object[] col3 = {"third", "String", "abc", "def", "ghi", "kmp", "MB", "MF", "SW:D", "SW:¨P", "DP", "MS"};
+		Object[] col4 = {"fourth", "Double", 1.2, 5.3, -100.02, 4.5, 6.021, 8.7, 639.0, 589.0, 7.12, 10.0};
+		Object[] col5 = {"eighth", "Float", 1.2f, 5.3f, -100.02f, 1.3f, 58.2f, 89.7f, null, -100.02f, 1.3f, 58.2f};
+		Object[] col6 = {"ninth", "Long", 1L, 5L, 9L, 1L, 5L, 140L, 1L, 5L, 140L, 45L};
+		Object[] col7 = {"fifth", "Long", 1L, 5L, 140L, 1L, 5L, 140L, 45L, 1L, 5L, 140L, 45L};
+		Object[][] data = {col1, col2, col3, col4, col5, col6,col7};
+		DataFrame df = new DataFrame(data);
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\tninth\teighth\t\n" +
+				"abc\ttrue\t1\t1.2\t10\t1\t1.2\t\n" +
+				"def\tfalse\t5\t5.3\t20\t5\t5.3\t\n" +
+				"ghi\ttrue\t140\t-100.02\t30\t9\t-100.02\t\n" +
+				"kmp\ttrue\t1\t4.5\t40\t1\t1.3\t\n" +
+				"MB\ttrue\t5\t6.021\t50\t5\t58.2\t\n";
+		assertEquals("Print message test", msg, df.showFirstLines());
+	}
 }
