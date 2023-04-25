@@ -1,5 +1,6 @@
 id,name,sold
-1,John,5000
-2,Jane,6000
-3,Bob,4000
-4,Alice,7000
+java.lang.Integer,java.lang.String,java.lang.Float
+1,John,5000.12
+2,Jane,6000.0
+3,Bob,4000.99
+4,Alice,-7000.45
