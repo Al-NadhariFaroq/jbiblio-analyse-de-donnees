@@ -13,18 +13,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 public class DataFrameTest {
-    Object[] col1 = {"first", "java.lang.Integer", 10, 20, 30};
-    Object[] col2 = {"second", "java.lang.Boolean", true, false, true};
-    Object[] col3 = {"third", "java.lang.String", "abc", "def", "ghi"};
-    Object[] col4 = {"fourth", "java.lang.Double", 1.2, 5.3, -100.02};
-    Object[] col5 = {"eighth", "java.lang.Float", 1.2f, 5.3f, -100.02f};
-    Object[] col6 = {"ninth", "java.lang.Long", 1L, 5L, 9L};
-	Object[] col7 = {"fifth", "java.lang.Long", 1L, 5L, 140L};
+    Object[] col1 = {"first", "Integer", 10, 20, 30};
+    Object[] col2 = {"second", "Boolean", true, false, true};
+    Object[] col3 = {"third", "String", "abc", "def", "ghi"};
+    Object[] col4 = {"fourth", "Double", 1.2, 5.3, -100.02};
+    Object[] col5 = {"eighth", "Float", 1.2f, 5.3f, -100.02f};
+    Object[] col6 = {"ninth", "Long", 1L, 5L, 9L};
+	Object[] col7 = {"fifth", "Long", 1L, 5L, 140L};
 	Object[][] data = {col1, col2, col3, col4, col5, col6,col7};
-    Object[][] dataCopy = {{"first", "java.lang.Integer", 10, 20, 30,40, 90, 100}};
+    Object[][] dataCopy = {{"first", "Integer", 10, 20, 30,40, 90, 100}};
     DataFrame dfCopy;
     DataFrame df;
-
 
     @Before
     public void init() throws ClassNotFoundException {
@@ -32,7 +31,7 @@ public class DataFrameTest {
         dfCopy = new DataFrame(dataCopy);
     }
 
-	@Test(expected = ClassNotFoundException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void init_exception() throws ClassNotFoundException{
 		Object[] col1 = {"first", "java.lang.Intege", 10, 20, 30};
 		Object[] col2 = {"second", "java.lang.Boolean", true, false, true};
@@ -481,7 +480,7 @@ public class DataFrameTest {
 	public void addColumn_cast_exception() {
 		Object[] column2 = {1.3, 2.3, "test", 42.0};
 		assertThrows("Wrong type in added column",
-				ClassCastException.class,
+				NumberFormatException.class,
 				() -> df.addColumn("sixth", Double.class, column2)
 		);
 	}
@@ -720,7 +719,7 @@ public class DataFrameTest {
     public void testColumnInvalidType() {
 
         assertThrows("Type not supported. Only accepts integer, long, double or float",
-                InvalidTypeException.class,
+                IllegalArgumentException.class,
                 () -> {
                     df.getMax("second");
                     df.getMin("second");
