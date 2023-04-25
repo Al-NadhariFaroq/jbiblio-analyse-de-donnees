@@ -17,17 +17,19 @@ public class DataFrame {
 	private final Hashtable<String, List<Object>> dataFrame;
 	private final Hashtable<String, String> typeFrame;
 
-	private final String noExistentColLbl
-			= "Invalid column label '%s': does not exist";
-	private final String existingColLbl
-			= "Invalid column label '%s': already exist";
+	private final String noExistentColLbl = "Invalid column label '%s': does not exist";
+	private final String existingColLbl = "Invalid column label '%s': already exist";
 	private final String unsupportedType = "Unsupported type '%s'";
 	private final String unableNbConversion = "Unable to convert '%s' to '%s'";
-	private final String typeNoMatchColType
-			= "Invalid type '%s': does not match the column type '%s'";
-	private final String valNoMatchColType
-			= "Invalid value type '%s': does not match the column type '%s'";
+	private final String typeNoMatchColType = "Invalid type '%s': does not match the column type '%s'";
+	private final String valNoMatchColType= "Invalid value type '%s': does not match the column type '%s'";
 
+
+	/**
+	 *
+	 * @param inputData
+	 * @throws ClassNotFoundException
+	 */
 	public DataFrame(Object[][] inputData) throws ClassNotFoundException {
 		dataFrame = new Hashtable<>();
 		typeFrame = new Hashtable<>();
@@ -35,8 +37,13 @@ public class DataFrame {
 		initialize(inputData);
 	}
 
-	public DataFrame(String filename)
-	throws IOException, ClassNotFoundException {
+	/**
+	 *
+	 * @param filename
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public DataFrame(String filename)throws IOException, ClassNotFoundException {
 		dataFrame = new Hashtable<>();
 		typeFrame = new Hashtable<>();
 
@@ -66,6 +73,10 @@ public class DataFrame {
 		br.close();
 	}
 
+	/**
+	 *
+	 * @param inputData
+	 */
 	private void initialize(Object[][] inputData) {
 		for (Object[] column : inputData) {
 			String label = String.valueOf(column[0]);
@@ -76,6 +87,13 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 * @param <T>
+	 */
 	private <T> T convert(Class<T> type, Object value) {
 		if (value == null) {
 			return null;
@@ -101,18 +119,23 @@ public class DataFrame {
 		};
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 * @param <T>
+	 */
 	private <T> T convertBoolean(Class<T> type, Boolean value) {
 		String typeName = type.getSimpleName();
 		T convertValue = (T) switch (typeName.toLowerCase()) {
 			case "boolean", "bool" -> value;
 			case "byte" -> value ? getOne(Byte.class) : getZero(Byte.class);
 			case "short" -> value ? getOne(Short.class) : getZero(Short.class);
-			case "integer" ->
-					value ? getOne(Integer.class) : getZero(Integer.class);
+			case "integer" ->value ? getOne(Integer.class) : getZero(Integer.class);
 			case "long" -> value ? getOne(Long.class) : getZero(Long.class);
 			case "float" -> value ? getOne(Float.class) : getZero(Float.class);
-			case "double" ->
-					value ? getOne(Double.class) : getZero(Double.class);
+			case "double" ->value ? getOne(Double.class) : getZero(Double.class);
 			case "character", "char" -> value ? '1' : '0';
 			case "string" -> value ? "true" : "false";
 			default -> null;
@@ -124,10 +147,16 @@ public class DataFrame {
 		return convertValue;
 	}
 
-	private <T, U extends Number> T convertNumber(Class<T> convertType,
-												  Class<U> valueType,
-												  U value
-	) {
+	/**
+	 *
+	 * @param convertType
+	 * @param valueType
+	 * @param value
+	 * @return
+	 * @param <T>
+	 * @param <U>
+	 */
+	private <T, U extends Number> T convertNumber(Class<T> convertType,Class<U> valueType, U value) {
 		String convertTypeName = convertType.getSimpleName();
 		T convertValue = (T) switch (convertTypeName.toLowerCase()) {
 			case "boolean", "bool" -> value.equals(getOne(valueType));
@@ -147,6 +176,13 @@ public class DataFrame {
 		return convertValue;
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 * @param <T>
+	 */
 	private <T> T convertCharacter(Class<T> type, Character value) {
 		String typeName = type.getSimpleName();
 		if (typeName.equalsIgnoreCase("string")) {
@@ -156,6 +192,13 @@ public class DataFrame {
 		throw new IllegalArgumentException(msg);
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 * @param <T>
+	 */
 	private <T> T convertString(Class<T> type, String value) {
 		String typeName = type.getSimpleName();
 		try {
@@ -182,6 +225,12 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @return
+	 * @param <T>
+	 */
 	private <T extends Number> T getZero(Class<T> type) {
 		String typeName = type.getSimpleName();
 		T zero = (T) switch (typeName.toLowerCase()) {
@@ -200,6 +249,12 @@ public class DataFrame {
 		return zero;
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @return
+	 * @param <T>
+	 */
 	private <T extends Number> T getOne(Class<T> type) {
 		String typeName = type.getSimpleName();
 		T one = (T) switch (typeName.toLowerCase()) {
@@ -218,6 +273,11 @@ public class DataFrame {
 		return one;
 	}
 
+	/**
+	 *
+	 * @param typeName
+	 * @return
+	 */
 	private Class<?> verifyType(String typeName) {
 		return switch (typeName.toLowerCase()) {
 			case "boolean", "bool" -> Boolean.class;
@@ -236,6 +296,11 @@ public class DataFrame {
 		};
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @return
+	 */
 	private String verifyType(Class<?> type) {
 		if (type.equals(Boolean.class)) {
 			return "Boolean";
@@ -261,10 +326,18 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 * Returns the number of columns in the dataFrame.
+	 * @return The number of columns.
+	 */
 	public int numCols() {
 		return dataFrame.size();
 	}
 
+	/**
+	 * Returns the number of rows in the dataFrame.
+	 * @return The number of rows.
+	 */
 	public int numRows() {
 		if (numCols() == 0) {
 			return 0;
@@ -272,6 +345,21 @@ public class DataFrame {
 		return dataFrame.elements().nextElement().size();
 	}
 
+	/**
+	 * Returns the shape of the dataFrame as an integer array.
+	 * @return An integer array of length 2, where the first element is
+	 * 		   the number of rows and the second element is the number of columns.
+	 */
+	public int[] shape(){
+		return new int[]{numRows(),numCols()};
+	}
+
+
+	/**
+	 *
+	 * @param label
+	 * @return
+	 */
 	public Class<?> getType(String label) {
 		try {
 			return Class.forName(typeFrame.get(label));
@@ -280,6 +368,14 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param idx
+	 * @param type
+	 * @return
+	 * @param <T>
+	 */
 	public <T> T getValue(String label, int idx, Class<T> type) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -308,6 +404,12 @@ public class DataFrame {
 		return type.cast(value);
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param value
+	 * @param <T>
+	 */
 	public <T> void addValue(String label, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -318,10 +420,7 @@ public class DataFrame {
 		try {
 			dataFrame.get(label).add(colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,
-													   value.getClass(),
-													   colType
-			));
+			throw new ClassCastException(String.format(valNoMatchColType,value.getClass(),colType));
 		}
 
 		Iterator<String> labelIt = dataFrame.keys().asIterator();
@@ -333,6 +432,13 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param idx
+	 * @param value
+	 * @param <T>
+	 */
 	public <T> void setValue(String label, int idx, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -343,13 +449,17 @@ public class DataFrame {
 		try {
 			dataFrame.get(label).set(idx, colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,
-													   value.getClass(),
-													   colType
-			));
+			throw new ClassCastException(String.format(valNoMatchColType, value.getClass(),colType));
 		}
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param oldValue
+	 * @param newValue
+	 * @param <T>
+	 */
 	public <T> void replaceValue(String label, T oldValue, T newValue) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -361,13 +471,16 @@ public class DataFrame {
 			int idx = dataFrame.get(label).indexOf(oldValue);
 			dataFrame.get(label).set(idx, colType.cast(newValue));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,
-													   newValue.getClass(),
-													   colType
-			));
+			throw new ClassCastException(String.format(valNoMatchColType,newValue.getClass(), colType));
 		}
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param value
+	 * @param <T>
+	 */
 	public <T> void removeValue(String label, T value) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -378,14 +491,16 @@ public class DataFrame {
 		try {
 			dataFrame.get(label).remove(colType.cast(value));
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format(valNoMatchColType,
-													   value.getClass(),
-													   colType
-			));
+			throw new ClassCastException(String.format(valNoMatchColType, value.getClass(),colType));
 		}
 		dataFrame.get(label).add(colType.cast(null));
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param idx
+	 */
 	public void removeValue(String label, int idx) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -396,6 +511,13 @@ public class DataFrame {
 		dataFrame.get(label).add(dataFrame.get(label).size(), null);
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param type
+	 * @return
+	 * @param <T>
+	 */
 	public <T> List<T> getColumn(String label, Class<T> type) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -416,12 +538,17 @@ public class DataFrame {
 		return out;
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param type
+	 * @param data
+	 * @param <T>
+	 */
 	public <T> void addColumn(String label, Class<T> type, Object[] data) {
 		int lengthActual = numRows();
 		if (dataFrame.containsKey(label)) {
-			throw new IllegalArgumentException(String.format(existingColLbl,
-															 label
-			));
+			throw new IllegalArgumentException(String.format(existingColLbl, label));
 		}
 		List<Object> colData = new ArrayList<>();
 		for (Object value : data) {
@@ -453,6 +580,13 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param label
+	 * @param type
+	 * @param data
+	 * @param <T>
+	 */
 	public <T> void setColumn(String label, Class<T> type, Object[] data) {
 		if (!dataFrame.containsKey(label)) {
 			throw new NoSuchElementException(String.format(noExistentColLbl,
@@ -463,24 +597,24 @@ public class DataFrame {
 			try {
 				type.cast(value);
 			} catch (ClassCastException e) {
-				throw new ClassCastException(String.format(valNoMatchColType,
-														   value.getClass(),
-														   type.getName()
-				));
+				throw new ClassCastException(String.format(valNoMatchColType,value.getClass(),type.getName()));
 			}
 		}
 		dataFrame.replace(label, new ArrayList<>(Arrays.asList(data)));
 		typeFrame.put(label, type.getName());
 	}
 
+	/**
+	 *
+	 * @param label
+	 */
 	public void removeColumn(String label) {
 		if (!dataFrame.containsKey(label)) {
-			throw new NoSuchElementException(String.format(noExistentColLbl,
-														   label
-			));
+			throw new NoSuchElementException(String.format(noExistentColLbl, label));
 		}
 		dataFrame.remove(label);
 	}
+
 
 	@Override
 	public String toString() {
@@ -503,10 +637,118 @@ public class DataFrame {
 		}
 		return txt.toString();
 	}
+	/**********************************************************************************/
+	/*********************************** Display *************************************/
+	/**********************************************************************************/
 
 	/**
-	 * @param colName column name
-	 * @return Double
+	 * Prints the first n rows of the dataFrame.
+	 * @param n The number of rows to print from the start of the dataFrame.
+	 */
+	public void head(int n) {
+
+	}
+
+	/**
+	 * Prints the first 5 rows of the dataFrame.
+	 */
+	public void head() {
+		head(5);
+	}
+
+	/**
+	 * Prints the last n rows of the dataFrame.
+	 * @param n The number of rows to print from the end of the dataFrame.
+	 */
+	public void tail(int n) {
+
+	}
+
+	/**
+	 * Prints the last 5 rows of the dataFrame.
+	 */
+	public void tail() {
+		tail(5);
+	}
+
+	/**
+	 * Prints the entire dataFrame.
+	 */
+	public void print() {
+
+	}
+
+
+	/**********************************************************************************/
+	/********************************* SUB DATAFRAMES *********************************/
+	/**********************************************************************************/
+
+	/**
+	 * loc : Returns a sub-DataFrame containing all rows of the specified columns.
+	 * @param colNames an array of column names to include in the sub-DataFrame
+	 * @return a sub-DataFrame containing all rows of the specified columns
+	 * @throws ClassNotFoundException if a column's data type cannot be determined
+	 */
+	public DataFrame loc(String... colNames) throws ClassNotFoundException {
+		Object[][] data = {};
+		DataFrame subFrame = new DataFrame(data);
+
+		for (String colName : colNames) {
+			Class<?> colType = getType(colName);
+			Object[] colData = {getColumn(colName, colType)};
+			subFrame.addColumn(colName, colType, colData);
+		}
+
+		return subFrame;
+	}
+
+
+	/**
+	 * iloc : Returns a sub-DataFrame containing all columns and rows between the specified indices.
+	 * @param startLine the index of the first row to include in the sub-DataFrame
+	 * @param endLine the index of the last row to include in the sub-DataFrame
+	 * @return a sub-DataFrame containing all columns and rows between the specified indices
+	 * @throws ClassNotFoundException if a column's data type cannot be determined
+	 */
+	public DataFrame iloc(int startLine, int endLine) throws ClassNotFoundException {
+		Object[][] data = {};
+		DataFrame subFrame = new DataFrame(data);
+
+		/*for (int i = startLine; i <= endLine; i++) {
+
+			}
+
+			subFrame.addRow(rowData);*/
+
+		return subFrame;
+	}
+
+	/**
+	 * Returns a DataFrame that satisfies the given condition on a specific column.
+	 * @param columnName The name of the column to filter.
+	 * @param condition The condition to apply on the values of the column.
+	 * @param value The value to compare the column values against.
+	 * @return A DataFrame containing the rows that satisfy the given condition.
+	 * @throws ClassNotFoundException If the specified column is not found in the DataFrame.
+	 */
+	public DataFrame locWhere(String columnName, String condition, Object value) throws ClassNotFoundException {
+		Object[][] data = {};
+		DataFrame subFrame = new DataFrame(data);
+
+
+		return subFrame;
+	}
+
+
+	/**********************************************************************************/
+	/********************************* STATISTICS *************************************/
+	/**********************************************************************************/
+
+	/**
+	 * Returns the mean of a numeric column.
+	 * @param colName The name of the column.
+	 * @return The mean value of the column as a Double.
+	 * @throws IllegalArgumentException if the column type is not numeric.
 	 */
 	public <T> T getMean(String colName) {
 		List<?> values = this.checkColumn(colName);
@@ -529,6 +771,12 @@ public class DataFrame {
 		return this.returnType(type, mean);
 	}
 
+	/**
+	 * Returns the median of a numeric column.
+	 * @param colName The name of the column.
+	 * @return The median value of the column as a Number.
+	 * @throws IllegalArgumentException if the column type is not numeric.
+	 */
 	public <T extends Number> T getMedian(String colName) {
 		List values = this.checkColumn(colName);
 		String type = this.typeFrame.get(colName);
@@ -548,6 +796,12 @@ public class DataFrame {
 		return this.returnType(type, result);
 	}
 
+	/**
+
+	 Returns the maximum value of a column.
+	 @param colName The name of the column.
+	 @return The maximum value of the column.
+	 */
 	public <T> T getMax(String colName) {
 		List values = this.checkColumn(colName);
 		T result;
@@ -556,6 +810,11 @@ public class DataFrame {
 		return result;
 	}
 
+	/**
+	 * Returns the minmum value of a column.
+	 * @param colName The name of the column.
+	 * @return The minmum value of the column.
+	 */
 	public <T> T getMin(String colName) {
 		List values = this.checkColumn(colName);
 		T result;
@@ -564,6 +823,15 @@ public class DataFrame {
 		return result;
 	}
 
+
+	/**********************************************************************************/
+	/********************************* PROTECTED METHODS ******************************/
+	/**********************************************************************************/
+	/**
+	 *
+	 * @param colName
+	 * @return
+	 */
 	protected List<?> checkColumn(String colName) {
 		List<?> val = new ArrayList<>();
 		if (this.dataFrame.containsKey(colName)) {
@@ -639,6 +907,13 @@ public class DataFrame {
 		}
 	}
 
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 * @param <T>
+	 */
 	protected <T> T returnType(String type, double value) {
 		return switch (type) {
 			case "java.lang.Integer" -> (T) Integer.valueOf((int) value);
