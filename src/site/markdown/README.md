@@ -13,11 +13,6 @@ The Panda Library is a Java library for working with data frames.
 
 To create a new data frame by passing in a 2D array:
 
-```
-Object[][] data = {{"John", 25, "Male"}, {"Sarah", 32, "Female"}};
-DataFrame frame = new DataFrame(data);
-```
-
 ## Documentation
 
 For full documentation of the Panda Library, please see the [API documentation](https://github.com/example/panda/blob/main/docs/api/index.html).
