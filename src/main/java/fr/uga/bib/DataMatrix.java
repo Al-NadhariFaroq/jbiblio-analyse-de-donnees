@@ -20,7 +20,6 @@ public class DataMatrix {
 			= "Invalid column label '%s': already exist";
 	protected final String noExistentValue
 			= "Invalid value '%s': does not exist in column '%s'";
-	protected final String unsupportedType = "Unsupported type '%s'";
 	protected final String typeNoMatchColType
 			= "Invalid type '%s': does not match the column type '%s'";
 	protected final String valNoMatchColType
