@@ -54,7 +54,7 @@
     <site>
       <id>site-projet</id>
       <name>Panda</name>
-      <url>git@github.com:Al-NadhariFaroq/Al-NadhariFaroq.github.io</url>
+      <url>https://Al-NadhariFaroq/Al-NadhariFaroq.github.io</url>
     </site>
 </distributionManagement>
   <reporting>
