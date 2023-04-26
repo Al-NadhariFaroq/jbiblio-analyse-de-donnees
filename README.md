@@ -33,7 +33,7 @@ Object[][] data = {{"John", 25, "Male"}, {"Sarah", 32, "Female"}};
 DataFrame frame = new DataFrame(data);
 </pre>
 <h2>Documentation</h2>
-<p>For full documentation of the Panda Library, please refer to the <a href="https://github.com/example/panda/blob/main/docs/api/index.html">API documentation</a>.</p><h2>License</h2>
+<p>For full documentation of the Panda Library, please refer to the <a href="https://al-nadharifaroq.github.io/jbiblio-analyse-de-donnees/apidocs/fr/uga/bib/DataFrame.html">API documentation</a>.</p><h2>License</h2>
 <p>The Panda Library is licensed under the <a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/blob/main/LICENSE">UGA license</a>.</p>
 </body>
 </html>
