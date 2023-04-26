@@ -1,10 +1,7 @@
 package fr.uga.bib;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Here all methods available for user
@@ -47,15 +44,12 @@ public class DataFrame extends DataMatrix {
         } else {
             StringBuilder txt = new StringBuilder();
 
-            Iterator<String> labelIt = dataFrame.keys().asIterator();
-            while (labelIt.hasNext()) {
-                txt.append(labelIt.next()).append("\t");
+            for (String colLabel : colLabels) {
+                txt.append(colLabel).append("\t");
             }
             txt.append("\n");
             for (int i = 0; i < n; i++) {
-                labelIt = dataFrame.keys().asIterator();
-                while (labelIt.hasNext()) {
-                    String label = labelIt.next();
+                for (String label : colLabels) {
                     Class<?> type = getColumnType(label);
                     txt.append(getValue(label, i, type)).append("\t");
                 }
@@ -83,16 +77,13 @@ public class DataFrame extends DataMatrix {
         } else {
             StringBuilder txt = new StringBuilder();
 
-            Iterator<String> labelIt = dataFrame.keys().asIterator();
-            while (labelIt.hasNext()) {
-                txt.append(labelIt.next()).append("\t");
+            for (String colLabel : colLabels) {
+                txt.append(colLabel).append("\t");
             }
             txt.append("\n");
             int j = getNumRows() - n;
             for (int i = j; i < getNumRows(); i++) {
-                labelIt = dataFrame.keys().asIterator();
-                while (labelIt.hasNext()) {
-                    String label = labelIt.next();
+                for (String label : colLabels) {
                     Class<?> type = getColumnType(label);
                     txt.append(getValue(label, i, type)).append("\t");
                 }
@@ -109,31 +100,6 @@ public class DataFrame extends DataMatrix {
         return tail(5);
     }
 
-    /**
-     * Prints the entire dataFrame.
-     */
-    @Override
-    public String toString() {
-        StringBuilder txt = new StringBuilder();
-
-        Iterator<String> labelIt = dataFrame.keys().asIterator();
-        while (labelIt.hasNext()) {
-            txt.append(labelIt.next()).append("\t");
-        }
-        txt.append("\n");
-
-        for (int i = 0; i < getNumRows(); i++) {
-            labelIt = dataFrame.keys().asIterator();
-            while (labelIt.hasNext()) {
-                String label = labelIt.next();
-                Class<?> type = getColumnType(label);
-                txt.append(getValue(label, i, type)).append("\t");
-            }
-            txt.append("\n");
-        }
-        return txt.toString();
-    }
-
     /* SELECTION */
 
     /**
@@ -147,10 +113,14 @@ public class DataFrame extends DataMatrix {
         Object[][] data = {};
         DataFrame subFrame = new DataFrame(data);
 
-        for (String colName : colNames) {
-            Class<?> colType = getColumnType(colName);
-            Object[] colData = getColumn(colName, colType).toArray();
-            subFrame.addColumn(colName, colType, colData);
+        for (String colLabel : colNames) {
+            if (!dataFrame.containsKey(colLabel)) {
+                String msg = String.format(noExistentColLbl, colLabel);
+                throw new NoSuchElementException(msg);
+            }
+            Class<?> colType = getColumnType(colLabel);
+            Object[] colData = getColumn(colLabel, colType).toArray();
+            subFrame.addColumn(colLabel, colType, colData);
         }
 
         return subFrame;
@@ -171,12 +141,10 @@ public class DataFrame extends DataMatrix {
         Object[][] data = {};
         DataFrame subFrame = new DataFrame(data);
 
-        Iterator<String> labelIt = dataFrame.keys().asIterator();
-        while (labelIt.hasNext()) {
-            String colName = labelIt.next();
-            Class<?> colType = getColumnType(colName);
-            List<?> subCol = getColumn(colName, colType).subList(startLine, endLine + 1);
-            subFrame.addColumn(colName, colType, subCol.toArray());
+        for (String colLabel : colLabels) {
+            Class<?> colType = getColumnType(colLabel);
+            List<?> subCol = getColumn(colLabel, colType).subList(startLine, endLine + 1);
+            subFrame.addColumn(colLabel, colType, subCol.toArray());
         }
 
         return subFrame;
@@ -186,16 +154,34 @@ public class DataFrame extends DataMatrix {
      * Returns a DataFrame that satisfies the given condition on a specific
      * column.
      *
-     * @param columnName the name of the column to filter.
-     * @param condition  the condition to apply on the values of the column.
-     * @param value      the value to compare the column values against.
+     * @param label     the name of the column to filter.
+     * @param op        the condition to apply on the values of the column.
+     * @param condValue the value to compare the column values against.
      * @return a DataFrame containing the rows that satisfy the given condition.
      */
-    public DataFrame locWhere(String columnName, int condition, Object value) {
-        Object[][] data = {};
+    public <T extends Comparable<T>> DataFrame locWhere(String label, Class<T> type, Operator op, T condValue) {
+        if (!dataFrame.containsKey(label)) {
+            String msg = String.format(noExistentColLbl, label);
+            throw new NoSuchElementException(msg);
+        }
+
+        Class<?> colType = getColumnType(label);
+        if (!type.equals(colType)) {
+            String msg = String.format(typeNoMatchColType,
+                    type.getSimpleName(),
+                    colType.getSimpleName()
+            );
+            throw new TypeException(msg);
+        }
+
+        Object[][] data = {{label, colType.getSimpleName()}};
         DataFrame subFrame = new DataFrame(data);
-
-
+        List<T> colValues = getColumn(label, type);
+        for (T value : colValues) {
+            if (op.test(value, condValue)) {
+                subFrame.addValue(label, value);
+            }
+        }
         return subFrame;
     }
 
