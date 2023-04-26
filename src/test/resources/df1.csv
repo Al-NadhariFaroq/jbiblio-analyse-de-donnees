@@ -1,0 +1,6 @@
+id,name,sold
+Integer,String,Float
+1,John,5000.12
+2,Jane,6000.0
+3,Bob,4000.99
+4,Alice,-7000.45
