@@ -17,8 +17,11 @@
         <breadcrumbs>
             <item name="Accueil" href="index.html"/>
         </breadcrumbs>
-
-        <!-- ===== Menus ===== -->
+        <menu name="DOCUMENTATION">
+            <item name="Readme" href="README.html"/>
+            <item name="FAQ" href="faq.html"/>
+        </menu>
+        <menu ref="reports" inherit="top"/>
         <!-- Ajout d'un menu vers le projet parent -->
         <menu ref="parent" inherit="top"/>
         <!-- Ajout d'un menu vers les différents modules du projet -->
