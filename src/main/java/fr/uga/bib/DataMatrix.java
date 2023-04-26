@@ -481,4 +481,29 @@ public class DataMatrix {
 			labelIt.next();
 		}
 	}
+
+	/**
+	 * Prints the entire dataFrame.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder txt = new StringBuilder();
+
+		Iterator<String> labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			txt.append(labelIt.next()).append("\t");
+		}
+		txt.append("\n");
+
+		for (int i = 0; i < getNumRows(); i++) {
+			labelIt = dataFrame.keys().asIterator();
+			while (labelIt.hasNext()) {
+				String label = labelIt.next();
+				Class<?> type = getColumnType(label);
+				txt.append(getValue(label, i, type)).append("\t");
+			}
+			txt.append("\n");
+		}
+		return txt.toString();
+	}
 }

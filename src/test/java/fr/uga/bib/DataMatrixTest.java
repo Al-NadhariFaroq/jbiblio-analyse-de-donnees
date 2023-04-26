@@ -549,9 +549,9 @@ public class DataMatrixTest {
 		dm.addValue("second", true);
 		dm.addValue("second", true);
 		assertEquals("Row number changed test", 7, dm.getNumRows());
-		System.out.println(dm.toString());
+
 		dm.removeColumn("second");
-		System.out.println(dm.toString());
+
 		assertEquals("Row number unchanged test", 3, dm.getNumRows());
 		assertEquals("Column number decreased test", 4, dm.getNumCols());
 
@@ -562,13 +562,21 @@ public class DataMatrixTest {
 		dm.addValue("third", "true");
 		dm.addValue("third", "true");
 
-		System.out.println(dm.toString());
-
 		assertEquals("Row number changed test", 9, dm.getNumRows());
 
 		/*dm.removeColumn("first");
 
 		assertEquals("Row number unchanged test", 4, dm.getNumRows());
 		assertEquals("Column number decreased test", 6, dm.getNumCols());*/
+	}
+
+	@Test
+	public void testToString() {
+		String msg = "third\tsecond\tfifth\tfourth\tfirst\t\n" +
+				"abc\ttrue\t1\t1.2\t10\t\n" +
+				"def\tfalse\t5\t5.3\t20\t\n" +
+				"ghi\ttrue\t140\t-100.02\t30\t\n";
+
+		assertEquals("Print all the DataFrame", msg, dm.toString());
 	}
 }

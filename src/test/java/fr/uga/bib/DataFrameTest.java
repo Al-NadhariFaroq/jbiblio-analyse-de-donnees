@@ -98,28 +98,102 @@ public class DataFrameTest {
     }
 
     @Test
-    public void testToString() {
+    public void loc() {
+        DataFrame subFrame = df.loc("int", "long", "string");
+        String msg = "int\tstring\tlong\t\n" +
+                "10\tabc\t10\t\n" +
+                "20\tdef\t20\t\n" +
+                "30\tghi\t30\t\n" +
+                "40\tjkl\t40\t\n" +
+                "50\t\t50\t\n" +
+                "60\tmno\t60\t\n";
+
+        assertEquals("Check the sub DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locNoSuchElementException() {
+        assertThrows("Non-existent column test",
+                NoSuchElementException.class,
+                () -> df.loc("int", "test", "float")
+        );
+    }
+
+    @Test
+    public void iloc() {
+        DataFrame subFrame = df.iloc(2, 5);
         String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "a\t10\ttrue\t1.2\t1\tabc\t10\t1.2\t1\t\n" +
-                "b\t20\tfalse\t5.3\t5\tdef\t20\t5.3\t5\t\n" +
                 "?\t30\ttrue\t-100.02\t-100\tghi\t30\t-100.02\t-100\t\n" +
                 "+\t40\ttrue\t3.1415\t-10\tjkl\t40\t3.1415\t-10\t\n" +
                 "&\t50\tfalse\t-42.0\t42\t\t50\t-42.0\t42\t\n" +
                 "9\t60\tfalse\t666.66\t-33\tmno\t60\t666.66\t-33\t\n";
 
-        assertEquals("Print all the DataFrame", msg, df.toString());
+        assertEquals("Check the sub DataFrame", msg, subFrame.tail());
+        assertEquals("Check the sub DataFrame", msg, subFrame.head());
     }
 
     @Test
-    public void loc() {
+    public void locWhereGTH() {
+        DataFrame subFrame = df.locWhere("float", Float.class, Operator.GTH, 1.9f);
+        String msg = "float\t\n5.3\t\n3.1415\t\n666.66\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
     }
 
     @Test
-    public void iloc() {
+    public void locWhereLTH() {
+        DataFrame subFrame = df.locWhere("string", String.class, Operator.LTH, "j");
+        String msg = "string\t\nabc\t\ndef\t\nghi\t\n\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
     }
 
     @Test
-    public void locWhere() {
+    public void locWhereGEQ() {
+        DataFrame subFrame = df.locWhere("short", Short.class, Operator.GEQ, (short) 5);
+        String msg = "short\t\n5\t\n42\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereLEQ() {
+        DataFrame subFrame = df.locWhere("double", Double.class, Operator.LEQ, 1.9);
+        String msg = "double\t\n1.2\t\n-100.02\t\n-42.0\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereEQ() {
+        DataFrame subFrame = df.locWhere("int", Integer.class, Operator.EQ, 10);
+        String msg = "int\t\n10\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereDIF() {
+        DataFrame subFrame = df.locWhere("char", Character.class, Operator.DIF, '?');
+        String msg = "char\t\na\t\nb\t\n+\t\n&\t\n9\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereNoSuchElementException() {
+        assertThrows("Non-existent column test",
+                NoSuchElementException.class,
+                () -> df.locWhere("test", Boolean.class, Operator.GTH, true)
+        );
+    }
+
+    @Test
+    public void locWhereTypeException() {
+        assertThrows("Given type does not match the column type",
+                TypeException.class,
+                () -> df.locWhere("int", Character.class, Operator.EQ, 'c')
+        );
     }
 
     @Test
@@ -242,6 +316,13 @@ public class DataFrameTest {
         assertThrows("the result is the mean value in the list",
                 TypeException.class,
                 () -> df.getMean("string")
+        );
+
+        data = new Object[][]{{"int", "Integer", 10, 20, 30}};
+        df = new DataFrame(data);
+        assertEquals("the result is the mean value in the list",
+                Integer.valueOf(20),
+                df.getMean("int")
         );
     }
 
