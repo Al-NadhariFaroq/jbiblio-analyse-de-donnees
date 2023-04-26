@@ -205,7 +205,12 @@ public class DataFrame extends DataMatrix {
 	 * @throws TypeException          if a value can not be converted to a
 	 *                                numeric value.
 	 */
-	public <T extends Number> T getMean(String label) {
+	public <T> T getMean(String label) {
+		if (!dataFrame.containsKey(label)) {
+			String msg = String.format(noExistentColLbl, label);
+			throw new NoSuchElementException(msg);
+		}
+
 		Class<?> type = getColumnType(label);
 		List<?> values = getColumn(label, type);
 
@@ -228,7 +233,12 @@ public class DataFrame extends DataMatrix {
 	 * @throws TypeException          if a value can not be converted to a
 	 *                                numeric value.
 	 */
-	public <T extends Number> T getMedian(String label) {
+	public <T> T getMedian(String label) {
+		if (!dataFrame.containsKey(label)) {
+			String msg = String.format(noExistentColLbl, label);
+			throw new NoSuchElementException(msg);
+		}
+
 		Class<?> type = getColumnType(label);
 		List values = getColumn(label, type);
 
@@ -239,11 +249,11 @@ public class DataFrame extends DataMatrix {
 		if (n % 2 == 0) {
 			int middleIndex1 = n / 2;
 			int middleIndex2 = middleIndex1 - 1;
-			result = ((Number) values.get(middleIndex1)).doubleValue() +
-					 ((Number) values.get(middleIndex2)).doubleValue() / 2.0;
+			result = Type.convert(Double.class, values.get(middleIndex1)) +
+					 Type.convert(Double.class, values.get(middleIndex2)) / 2.0;
 		} else {
 			int middleIndex = n / 2;
-			result = ((Number) values.get(middleIndex)).doubleValue();
+			result = Type.convert(Double.class, values.get(middleIndex));
 		}
 
 		//noinspection unchecked
@@ -260,6 +270,11 @@ public class DataFrame extends DataMatrix {
 	 *                                numeric value.
 	 */
 	public <T> T getMax(String label) {
+		if (!dataFrame.containsKey(label)) {
+			String msg = String.format(noExistentColLbl, label);
+			throw new NoSuchElementException(msg);
+		}
+
 		Class<?> type = getColumnType(label);
 		List values = getColumn(label, type);
 		Collections.sort(values);
@@ -277,6 +292,11 @@ public class DataFrame extends DataMatrix {
 	 *                                numeric value.
 	 */
 	public <T> T getMin(String label) {
+		if (!dataFrame.containsKey(label)) {
+			String msg = String.format(noExistentColLbl, label);
+			throw new NoSuchElementException(msg);
+		}
+
 		Class<?> type = getColumnType(label);
 		List values = getColumn(label, type);
 		Collections.sort(values);
