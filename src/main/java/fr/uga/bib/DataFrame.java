@@ -44,15 +44,12 @@ public class DataFrame extends DataMatrix {
         } else {
             StringBuilder txt = new StringBuilder();
 
-            Iterator<String> labelIt = dataFrame.keys().asIterator();
-            while (labelIt.hasNext()) {
-                txt.append(labelIt.next()).append("\t");
+            for (String colLabel : colLabels) {
+                txt.append(colLabel).append("\t");
             }
             txt.append("\n");
             for (int i = 0; i < n; i++) {
-                labelIt = dataFrame.keys().asIterator();
-                while (labelIt.hasNext()) {
-                    String label = labelIt.next();
+                for (String label : colLabels) {
                     Class<?> type = getColumnType(label);
                     txt.append(getValue(label, i, type)).append("\t");
                 }
@@ -80,16 +77,13 @@ public class DataFrame extends DataMatrix {
         } else {
             StringBuilder txt = new StringBuilder();
 
-            Iterator<String> labelIt = dataFrame.keys().asIterator();
-            while (labelIt.hasNext()) {
-                txt.append(labelIt.next()).append("\t");
+            for (String colLabel : colLabels) {
+                txt.append(colLabel).append("\t");
             }
             txt.append("\n");
             int j = getNumRows() - n;
             for (int i = j; i < getNumRows(); i++) {
-                labelIt = dataFrame.keys().asIterator();
-                while (labelIt.hasNext()) {
-                    String label = labelIt.next();
+                for (String label : colLabels) {
                     Class<?> type = getColumnType(label);
                     txt.append(getValue(label, i, type)).append("\t");
                 }
@@ -147,9 +141,7 @@ public class DataFrame extends DataMatrix {
         Object[][] data = {};
         DataFrame subFrame = new DataFrame(data);
 
-        Iterator<String> labelIt = dataFrame.keys().asIterator();
-        while (labelIt.hasNext()) {
-            String colLabel = labelIt.next();
+        for (String colLabel : colLabels) {
             Class<?> colType = getColumnType(colLabel);
             List<?> subCol = getColumn(colLabel, colType).subList(startLine, endLine + 1);
             subFrame.addColumn(colLabel, colType, subCol.toArray());
