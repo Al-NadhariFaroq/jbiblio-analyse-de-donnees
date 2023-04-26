@@ -53,7 +53,8 @@
     </repository>
     <site>
       <id>site-projet</id>
-      <url>scp://panda.org/www/</url>
+      <name>Panda</name>
+      <url>git@github.com:Al-NadhariFaroq/Al-NadhariFaroq.github.io</url>
     </site>
 </distributionManagement>
   <reporting>
