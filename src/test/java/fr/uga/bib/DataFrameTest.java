@@ -158,7 +158,7 @@ public class DataFrameTest {
 
     @Test
     public void locWhereLEQ() {
-        DataFrame subFrame = df.locWhere("double", Double.class, Operator.LEQ, 1.9);
+        DataFrame subFrame = df.locWhere("double", Double.class, Operator.LEQ, 1.2);
         String msg = "double\t\n1.2\t\n-100.02\t\n-42.0\t\n";
 
         assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
@@ -166,7 +166,7 @@ public class DataFrameTest {
 
     @Test
     public void locWhereEQ() {
-        DataFrame subFrame = df.locWhere("int", Integer.class, Operator.EQ, 10);
+        DataFrame subFrame = df.locWhere("int", Integer.class, Operator.EQU, 10);
         String msg = "int\t\n10\t\n";
 
         assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
@@ -192,7 +192,7 @@ public class DataFrameTest {
     public void locWhereTypeException() {
         assertThrows("Given type does not match the column type",
                 TypeException.class,
-                () -> df.locWhere("int", Character.class, Operator.EQ, 'c')
+                () -> df.locWhere("int", Character.class, Operator.EQU, 'c')
         );
     }
 
