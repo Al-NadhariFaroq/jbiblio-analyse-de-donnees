@@ -1,0 +1,27 @@
+-locale
+'fr'
+-classpath
+'/home/f1r09/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/home/f1r09/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'
+-encoding
+'UTF-8'
+-protected
+-quiet
+--release
+17
+-sourcepath
+'/mnt/d/Cours/Master/S8/DevOps/jbiblio-analyse-de-donnees/src/main/java:/mnt/d/Cours/Master/S8/DevOps/jbiblio-analyse-de-donnees/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2023. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/mnt/d/Cours/Master/S8/DevOps/jbiblio-analyse-de-donnees/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'jbiblio-analyse-de-donnees 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'jbiblio-analyse-de-donnees 1.0-SNAPSHOT API'

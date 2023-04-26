@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"fr.uga.bib","l":"DataFrame"},{"p":"fr.uga.bib","l":"DataMatrix"},{"p":"fr.uga.bib","l":"Operator"}];updateSearchResults();
