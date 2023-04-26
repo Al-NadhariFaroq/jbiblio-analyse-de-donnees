@@ -6,18 +6,45 @@
 <body>
 <h1>Panda Library</h1>
 <p align="center">
-<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="Website" src="https://img.shields.io/website?down_color=lightgrey&down_message=down&style=plastic&up_color=blue&up_message=up&url=https%3A%2F%2Fgithub.com%2FAl-NadhariFaroq%2Fjbiblio-analyse-de-donnees">
-<img alt="GitHub Workflow Status (with branch)" src="https://img.shields.io/github/actions/workflow/status/Al-NadhariFaroq/jbiblio-analyse-de-donnees/maven.yml?branch=main&style=plastic">
-<img alt="Coveralls branch" src="https://img.shields.io/badge/coverage-98%25-brightgreen?style=plastic">
-<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Al-NadhariFaroq/jbiblio-analyse-de-donnees?branch=main&style=plastic">
-<img alt="GitHub repo file count (custom path)" src="https://img.shields.io/github/directory-file-count/Al-NadhariFaroq/jbiblio-analyse-de-donnees/src/main/java/fr/uga/bib?style=plastic">
-<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="GitHub closed pull requests" src="https://img.shields.io/github/issues-pr-closed/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
-<img alt="GitHub" src="https://img.shields.io/github/license/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic">
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/graphs/contributors">
+<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://al-nadharifaroq.github.io/jbiblio-analyse-de-donnees/index.html">
+<img alt="Website" src="https://img.shields.io/website?down_color=lightgrey&down_message=down&style=plastic&up_color=blue&up_message=up&url=https%3A%2F%2Fgithub.com%2FAl-NadhariFaroq%2Fjbiblio-analyse-de-donnees" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees">
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Al-NadhariFaroq/jbiblio-analyse-de-donnees/maven.yml?branch=main&style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees">
+<img alt="Coveralls branch" src="https://img.shields.io/badge/coverage-98%25-brightgreen?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/search?l=java">
+<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Al-NadhariFaroq/jbiblio-analyse-de-donnees?branch=main&style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/tree/main/src/main/java/fr/uga/bib">
+<img alt="GitHub repo file count" src="https://img.shields.io/github/directory-file-count/Al-NadhariFaroq/jbiblio-analyse-de-donnees/src/main/java/fr/uga/bib?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees">
+<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees">
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://hub.docker.com/r/f1r09/jbiblio">
+<img alt="Docker Image Size" src="https://img.shields.io/docker/image-size/f1r09/jbiblio?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/graphs/commit-activity">
+<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/graphs/commit-activity">
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/pulls?q=is%3Apr+is%3Aclosed">
+<img alt="GitHub closed pull requests" src="https://img.shields.io/github/issues-pr-closed/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
+<a href="https://github.com/Al-NadhariFaroq/jbiblio-analyse-de-donnees/blob/main/LICENSE">
+<img alt="GitHub License" src="https://img.shields.io/github/license/Al-NadhariFaroq/jbiblio-analyse-de-donnees?style=plastic" />
+</a>
 </p>
 <p>The Panda Library is a Java library for working with data frames.</p>
 <h2>Features</h2>
