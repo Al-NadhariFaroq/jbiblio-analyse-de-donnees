@@ -29,12 +29,12 @@ public class DataFrameTest {
 
     @Test
     public void initCSV() throws IOException {
-        df = new DataFrame("src/test/resources/df.csv");
-        String msg = "name\tsold\tid\t\n" +
-                "John\t5000.12\t1\t\n" +
-                "Jane\t6000.0\t2\t\n" +
-                "Bob\t4000.99\t3\t\n" +
-                "Alice\t-7000.45\t4\t\n";
+        df = new DataFrame("src/test/resources/df1.csv");
+        String msg = "id\tname\tsold\t\n" +
+                "1\tJohn\t5000.12\t\n" +
+                "2\tJane\t6000.0\t\n" +
+                "3\tBob\t4000.99\t\n" +
+                "4\tAlice\t-7000.45\t\n";
 
         assertEquals("Get column number test", 3, df.shape()[1]);
         assertEquals("Get row number test", 4, df.shape()[0]);
@@ -55,71 +55,145 @@ public class DataFrameTest {
 
     @Test
     public void head() {
-        String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "a\t10\ttrue\t1.2\t1\tabc\t10\t1.2\t1\t\n" +
-                "b\t20\tfalse\t5.3\t5\tdef\t20\t5.3\t5\t\n" +
-                "?\t30\ttrue\t-100.02\t-100\tghi\t30\t-100.02\t-100\t\n";
+        String msg = "bool\tbyte\tshort\tint\tlong\tfloat\tdouble\tchar\tstring\t\n" +
+                "true\t1\t1\t10\t10\t1.2\t1.2\ta\tabc\t\n" +
+                "false\t5\t5\t20\t20\t5.3\t5.3\tb\tdef\t\n" +
+                "true\t-100\t-100\t30\t30\t-100.02\t-100.02\t?\tghi\t\n";
 
         assertEquals("Print n first lines", msg, df.head(3));
     }
 
     @Test
     public void head5() {
-        String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "a\t10\ttrue\t1.2\t1\tabc\t10\t1.2\t1\t\n" +
-                "b\t20\tfalse\t5.3\t5\tdef\t20\t5.3\t5\t\n" +
-                "?\t30\ttrue\t-100.02\t-100\tghi\t30\t-100.02\t-100\t\n" +
-                "+\t40\ttrue\t3.1415\t-10\tjkl\t40\t3.1415\t-10\t\n" +
-                "&\t50\tfalse\t-42.0\t42\t\t50\t-42.0\t42\t\n";
+        String msg = "bool\tbyte\tshort\tint\tlong\tfloat\tdouble\tchar\tstring\t\n" +
+                "true\t1\t1\t10\t10\t1.2\t1.2\ta\tabc\t\n" +
+                "false\t5\t5\t20\t20\t5.3\t5.3\tb\tdef\t\n" +
+                "true\t-100\t-100\t30\t30\t-100.02\t-100.02\t?\tghi\t\n" +
+                "true\t-10\t-10\t40\t40\t3.1415\t3.1415\t+\tjkl\t\n" +
+                "false\t42\t42\t50\t50\t-42.0\t-42.0\t&\t\t\n";
 
         assertEquals("Print 5 first lines", msg, df.head());
     }
 
     @Test
     public void tail() {
-        String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "+\t40\ttrue\t3.1415\t-10\tjkl\t40\t3.1415\t-10\t\n" +
-                "&\t50\tfalse\t-42.0\t42\t\t50\t-42.0\t42\t\n" +
-                "9\t60\tfalse\t666.66\t-33\tmno\t60\t666.66\t-33\t\n";
+        String msg = "bool\tbyte\tshort\tint\tlong\tfloat\tdouble\tchar\tstring\t\n" +
+                "true\t-10\t-10\t40\t40\t3.1415\t3.1415\t+\tjkl\t\n" +
+                "false\t42\t42\t50\t50\t-42.0\t-42.0\t&\t\t\n" +
+                "false\t-33\t-33\t60\t60\t666.66\t666.66\t9\tmno\t\n";
 
         assertEquals("Print last lines", msg, df.tail(3));
     }
 
     @Test
     public void tail5() {
-        String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "b\t20\tfalse\t5.3\t5\tdef\t20\t5.3\t5\t\n" +
-                "?\t30\ttrue\t-100.02\t-100\tghi\t30\t-100.02\t-100\t\n" +
-                "+\t40\ttrue\t3.1415\t-10\tjkl\t40\t3.1415\t-10\t\n" +
-                "&\t50\tfalse\t-42.0\t42\t\t50\t-42.0\t42\t\n" +
-                "9\t60\tfalse\t666.66\t-33\tmno\t60\t666.66\t-33\t\n";
+        String msg = "bool\tbyte\tshort\tint\tlong\tfloat\tdouble\tchar\tstring\t\n" +
+                "false\t5\t5\t20\t20\t5.3\t5.3\tb\tdef\t\n" +
+                "true\t-100\t-100\t30\t30\t-100.02\t-100.02\t?\tghi\t\n" +
+                "true\t-10\t-10\t40\t40\t3.1415\t3.1415\t+\tjkl\t\n" +
+                "false\t42\t42\t50\t50\t-42.0\t-42.0\t&\t\t\n" +
+                "false\t-33\t-33\t60\t60\t666.66\t666.66\t9\tmno\t\n";
 
         assertEquals("Print 5 last lines", msg, df.tail());
     }
 
     @Test
-    public void testToString() {
-        String msg = "char\tlong\tbool\tfloat\tshort\tstring\tint\tdouble\tbyte\t\n" +
-                "a\t10\ttrue\t1.2\t1\tabc\t10\t1.2\t1\t\n" +
-                "b\t20\tfalse\t5.3\t5\tdef\t20\t5.3\t5\t\n" +
-                "?\t30\ttrue\t-100.02\t-100\tghi\t30\t-100.02\t-100\t\n" +
-                "+\t40\ttrue\t3.1415\t-10\tjkl\t40\t3.1415\t-10\t\n" +
-                "&\t50\tfalse\t-42.0\t42\t\t50\t-42.0\t42\t\n" +
-                "9\t60\tfalse\t666.66\t-33\tmno\t60\t666.66\t-33\t\n";
+    public void loc() {
+        DataFrame subFrame = df.loc("int", "long", "string");
+        String msg = "int\tlong\tstring\t\n" +
+                "10\t10\tabc\t\n" +
+                "20\t20\tdef\t\n" +
+                "30\t30\tghi\t\n" +
+                "40\t40\tjkl\t\n" +
+                "50\t50\t\t\n" +
+                "60\t60\tmno\t\n";
 
-        assertEquals("Print all the DataFrame", msg, df.toString());
+        assertEquals("Check the sub DataFrame", msg, subFrame.toString());
     }
 
     @Test
-    public void loc() {
+    public void locNoSuchElementException() {
+        assertThrows("Non-existent column test",
+                NoSuchElementException.class,
+                () -> df.loc("int", "test", "float")
+        );
     }
 
     @Test
     public void iloc() {
+        DataFrame subFrame = df.iloc(2, 5);
+        String msg = "bool\tbyte\tshort\tint\tlong\tfloat\tdouble\tchar\tstring\t\n" +
+                "true\t-100\t-100\t30\t30\t-100.02\t-100.02\t?\tghi\t\n" +
+                "true\t-10\t-10\t40\t40\t3.1415\t3.1415\t+\tjkl\t\n" +
+                "false\t42\t42\t50\t50\t-42.0\t-42.0\t&\t\t\n" +
+                "false\t-33\t-33\t60\t60\t666.66\t666.66\t9\tmno\t\n";
+
+        assertEquals("Check the sub DataFrame", msg, subFrame.tail());
+        assertEquals("Check the sub DataFrame", msg, subFrame.head());
     }
 
     @Test
-    public void locWhere() {
+    public void locWhereGTH() {
+        DataFrame subFrame = df.locWhere("float", Float.class, Operator.GTH, 1.9f);
+        String msg = "float\t\n5.3\t\n3.1415\t\n666.66\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereLTH() {
+        DataFrame subFrame = df.locWhere("string", String.class, Operator.LTH, "j");
+        String msg = "string\t\nabc\t\ndef\t\nghi\t\n\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereGEQ() {
+        DataFrame subFrame = df.locWhere("short", Short.class, Operator.GEQ, (short) 5);
+        String msg = "short\t\n5\t\n42\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereLEQ() {
+        DataFrame subFrame = df.locWhere("double", Double.class, Operator.LEQ, 1.2);
+        String msg = "double\t\n1.2\t\n-100.02\t\n-42.0\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereEQ() {
+        DataFrame subFrame = df.locWhere("int", Integer.class, Operator.EQU, 10);
+        String msg = "int\t\n10\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereDIF() {
+        DataFrame subFrame = df.locWhere("char", Character.class, Operator.DIF, '?');
+        String msg = "char\t\na\t\nb\t\n+\t\n&\t\n9\t\n";
+
+        assertEquals("Check the filtered DataFrame", msg, subFrame.toString());
+    }
+
+    @Test
+    public void locWhereNoSuchElementException() {
+        assertThrows("Non-existent column test",
+                NoSuchElementException.class,
+                () -> df.locWhere("test", Boolean.class, Operator.GTH, true)
+        );
+    }
+
+    @Test
+    public void locWhereTypeException() {
+        assertThrows("Given type does not match the column type",
+                TypeException.class,
+                () -> df.locWhere("int", Character.class, Operator.EQU, 'c')
+        );
     }
 
     @Test
@@ -243,6 +317,13 @@ public class DataFrameTest {
                 TypeException.class,
                 () -> df.getMean("string")
         );
+
+        data = new Object[][]{{"int", "Integer", 10, 20, 30}};
+        df = new DataFrame(data);
+        assertEquals("the result is the mean value in the list",
+                Integer.valueOf(20),
+                df.getMean("int")
+        );
     }
 
     @Test
@@ -283,6 +364,13 @@ public class DataFrameTest {
         assertThrows("the result is the median value in the list",
                 TypeException.class,
                 () -> df.getMedian("string")
+        );
+
+        data = new Object[][]{{"int", "int", 1, 2, 3, 4, 5}};
+        df = new DataFrame(data);
+        assertEquals("the result is the median value in the list",
+                Integer.valueOf(3),
+                df.getMedian("int")
         );
     }
 
