@@ -37,8 +37,8 @@ public class OperatorTest {
 
     @Test
     public void EQTest() {
-        assertTrue("EQ test", Operator.EQ.test("equal", "equal"));
-        assertFalse("EQ test", Operator.EQ.test("not equal", "different"));
+        assertTrue("EQ test", Operator.EQU.test("equal", "equal"));
+        assertFalse("EQ test", Operator.EQU.test("not equal", "different"));
     }
 
     @Test
