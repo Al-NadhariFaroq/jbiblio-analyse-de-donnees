@@ -19,7 +19,7 @@
     DataFrame frame = new DataFrame(data);
     </pre>
     <h2>Documentation</h2>
-    <p>For full documentation of the Panda Library, please see the <a href="https://github.com/example/panda/blob/main/docs/api/index.html">API documentation</a>.</p>
+    <p>For full documentation of the Panda Library, please see the <a href="https://al-nadharifaroq.github.io/apidocs/fr/uga/bib/DataFrame.html">API documentation</a>.</p>
     <h2>Contributing</h2>
     <p>If you would like to contribute to the Panda Library, please see the <a href="https://github.com/example/panda/blob/main/CONTRIBUTING.md">contributing guidelines</a>.</p>
     <h2>License</h2>
