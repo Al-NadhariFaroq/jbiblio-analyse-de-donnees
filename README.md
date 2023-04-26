@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><title>Panda Library</title>
+<meta charset="UTF-8">
 </head>
 <body>
 <h1>Panda Library</h1>
@@ -29,7 +29,7 @@
 <h2>Getting Started</h2>
 <p>To create a new data frame by passing in a 2D array:</p>
 <pre>
-Object[][] data = {{"John", 25, "Male"}, {"Sarah", 32, "Female"}};
+Object[][] data = new Object[][]{{"John", 25, "Male"}, {"Sarah", 32, "Female"}};
 DataFrame frame = new DataFrame(data);
 </pre>
 <h2>Documentation</h2>
