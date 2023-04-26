@@ -17,7 +17,10 @@ public class App {
 
 		DataFrame df = new DataFrame(data);
 
-		DataFrame sdf = df.loc("first", "second");
+		DataFrame sdf = df.iloc(1,2);
+
+		//Object[] row= {false,554};
+		//df.addRow(row);
 
 		System.out.println(sdf);
 	}

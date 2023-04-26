@@ -65,6 +65,7 @@ public class DataFrame extends DataMatrix {
 		}
 	}
 
+
 	/**
 	 * Prints the first 5 rows of the dataFrame.
 	 */
@@ -149,7 +150,7 @@ public class DataFrame extends DataMatrix {
 
 		for (String colName : colNames) {
 			Class<?> colType = getColumnType(colName);
-			Object[] colData = {getColumn(colName, colType)};
+			Object[] colData = getColumn(colName, colType).toArray();
 			subFrame.addColumn(colName, colType, colData);
 		}
 
@@ -171,9 +172,13 @@ public class DataFrame extends DataMatrix {
 		Object[][] data = {};
 		DataFrame subFrame = new DataFrame(data);
 
-		/*for (int i = startLine; i <= endLine; i++) {
+		Iterator<String> labelIt = dataFrame.keys().asIterator();
+		while (labelIt.hasNext()) {
+			String colName= labelIt.next();
+			Class<?> colType = getColumnType(colName);
+			List<?> subCol = getColumn(colName,colType).subList(startLine,endLine+1);
+			subFrame.addColumn(colName,colType,subCol.toArray());
 		}
-		subFrame.addRow(rowData);*/
 
 		return subFrame;
 	}
@@ -187,8 +192,7 @@ public class DataFrame extends DataMatrix {
 	 * @param value      the value to compare the column values against.
 	 * @return a DataFrame containing the rows that satisfy the given condition.
 	 */
-	public DataFrame locWhere(String columnName, String condition, Object value
-	) {
+	public DataFrame locWhere(String columnName, int condition, Object value) {
 		Object[][] data = {};
 		DataFrame subFrame = new DataFrame(data);
 		return subFrame;
