@@ -1,5 +1,6 @@
 import fr.uga.bib.DataFrame;
-import java.io.*;
+import fr.uga.bib.DataMatrix;
+import fr.uga.bib.Operator;
 public class Demo {
     public static void main(String[] args) {
         Object[] col1 = {"bool", "Boolean", true, false, true, true, false, false};
@@ -13,6 +14,26 @@ public class Demo {
         Object[] col9 = {"string", "String", "abc", "def", "ghi", "jkl", "", "mno"};
         Object[][] data = {col1, col2, col3, col4, col5, col6, col7, col8, col9};
         DataFrame df = new DataFrame(data);
-        df.getMean("int");
+        System.out.println("------- Select ------");
+        System.out.println("Print the entire dataframe \n" +df.toString());
+        System.out.println("Print the columns int long and short \n" +df.loc("int", "long", "short"));
+
+        System.out.println("------- Filter ------");
+        System.out.println("Filter the dataframe where the float column value is greater than 1.9 \n"+df.locWhere("float", Float.class, Operator.GTH, 1.9f).toString());
+        System.out.println("Filter the dataframe where rows index are between 2 and 3 \n"+df.iloc(2, 3).toString());
+        System.out.println("Display the rows of the column char where value is different than ? \n" +df.locWhere("char", Character.class, Operator.DIF, '?').toString());
+        System.out.println("Print the last 3 rows of the dataframe \n"+ df.tail(3).toString());
+        System.out.println("Print the first row of the dataframe \n" +df.head(1).toString());
+
+        System.out.println("------- Stats ------");
+        System.out.println("The min value of column int is "+df.getMin("int").toString());
+        System.out.println("The max value of column long is "+df.getMax("long").toString());
+        System.out.println("The median of column float is "+df.getMedian("float").toString());
+        System.out.println("The mean of column double is "+df.getMean("double").toString());
+
+
+
     }
+
+
 }

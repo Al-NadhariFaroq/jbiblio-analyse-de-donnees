@@ -5,5 +5,7 @@ WORKDIR app
 # Copy necessary files
 COPY target/devops-jbiblio-analyse-de-donnees-1.0-SNAPSHOT.jar .
 COPY AUTHORS .
+COPY Demo.java .
+COPY launch.sh .
 
-CMD ["cat", "AUTHORS"]
+CMD ["bash", "launch.sh"]
